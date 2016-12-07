@@ -3,7 +3,7 @@
   -*Read LICENSE to know more about permissions*-
 
   Logger file. Logs to console a specified input with several options.
-  To know more about it, check: https://github.com/TheRacingLion/Discord-SelfBot
+  To know more about it, check: https://github.com/TheRacingLion/Discord-SelfBot#--logging--
 */
 const moment = require('moment')
 const chalk = require('chalk')
