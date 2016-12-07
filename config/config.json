@@ -1,0 +1,16 @@
+{
+  "token": "Your discord token",
+  "ownerID": "Your Discord ID",
+  "prefix": "-",
+  "rotatePlayingGame": true,
+  "rotatePlayingGameTime" : 150000,
+  "mentionNotificator": {
+    "inConsole": true,
+    "inNotificationChannel": true
+  },
+  "eventNotificator": {
+    "inConsole": true,
+    "inNotificationChannel": false
+  },
+  "notificationChannelID": "Notification channel ID if you set 'inNotificationChannel' to true at least once"
+}
