@@ -1,5 +1,5 @@
 /*
-  Ban. Bans a user from a guild. Can input a mention or an ID. Can specify how many days of messages to delete.
+  Ban. Bans a user from a guild. Can input a mention or an ID. Can specify how many days of messages to delete. (Needs "Ban Members" permission)
   "ban @user 3" will ban "user" and delete 3 days of their messages (Will only accept number of days between 1 - 9) (Default is 3)
 */
 module.exports = (self, log) => {

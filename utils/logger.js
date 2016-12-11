@@ -27,7 +27,7 @@ module.exports = {
   mention: function (msg) {
     if (typeof msg === 'object') {
       const cleanMsg = msg.cleanContent.replace(/\n/g, ' ')
-      logger('magenta', 'Mention', `|> ${chalk.bgYellow.bold(msg.guild.name)}|> #${chalk.bgYellow.bold(msg.channel.name)}|> ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
+      logger('bgMagenta', 'Mention', `${chalk.bgYellow.bold(msg.guild.name)} > ${chalk.bgYellow.bold('#' + msg.channel.name)} > ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
     }
   },
   ready: function (self, config) {

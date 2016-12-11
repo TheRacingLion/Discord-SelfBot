@@ -1,5 +1,5 @@
 /*
-  Kick. Kicks a mentioned user from a guild. Can input a mention or an ID. (Needs Kick Members permisssion)
+  Kick. Kicks a user from a guild. Can input a mention or an ID. (Needs "Kick Members" permisssion)
 */
 module.exports = (self, log) => {
   self.registerCommand('kick', (msg, args) => {
