@@ -1,5 +1,5 @@
 /*
-  Created by TheRacingLion (https://github.com/TheRacingLion) [ 6 / 12 / 2016 ]
+  Created by TheRacingLion (https://github.com/TheRacingLion) [ 18 / 12 / 2016 ]
   -*Read LICENSE to know more about permissions*-
 
   Main Selfbot file. Events and setting up the discord client.
@@ -8,6 +8,7 @@ const Eris = require('eris')
 const fs = require('fs')
 const config = require('./config/config.json')
 const games = require('./config/games.json')
+const helper = require('./utils/helpers.js')
 const log = require('./utils/logger.js')
 
 // Check if config is valid
@@ -31,11 +32,11 @@ self.on('ready', () => {
   }
 })
 
-self.on('warn', (msg) => { log.warn(msg) })
+self.on('warn', (msg) => log.warn(msg))
 
-self.on('error', (err) => { log.err(err, 'Bot') })
+self.on('error', (err) => log.err(err, 'Bot'))
 
-self.on('disconnect', () => { log.log('Bot Disconnected from Discord', 'Disconnect') })
+self.on('disconnect', () => log.log('Disconnected from Discord', 'Disconnect'))
 
 let cmds = {} // eslint-disable-line
 fs.readdir(__dirname + '/commands/', (err, files) => {
@@ -44,7 +45,7 @@ fs.readdir(__dirname + '/commands/', (err, files) => {
     for (let command of files) {
       if (command.endsWith('.js')) {
         command = command.replace(/\.js$/, '')
-        cmds = require(`./commands/${command}.js`)(self, log)
+        cmds = require(`./commands/${command}.js`)(self, log, helper)
       }
     }
     log.log('Finished.', 'Cmds', 'bgGreen', true)
@@ -55,8 +56,8 @@ self.on('messageCreate', (msg) => { if (msg.author.id === self.user.id) { if (ms
 
 require('./utils/mentionStalker.js')(self, log, config)
 
-self.connect().catch(err => { log.err(err, 'Login') })
+self.connect().catch(err => log.err(err, 'Login'))
 
-process.on('SIGINT', () => { self.disconnect({reconnect: false}); setTimeout(() => { process.exit(0) }, 1000) })
+process.on('SIGINT', () => { self.disconnect({reconnect: false}); setTimeout(() => process.exit(0), 1000) })
 
-process.on('unhandledRejection', (err) => { log.err(err, 'Promise was rejected but there was no error handler') })
+process.on('unhandledRejection', (err) => log.err(err, 'Promise was rejected but there was no error handler'))

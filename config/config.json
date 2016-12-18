@@ -12,5 +12,7 @@
     "inConsole": true,
     "inNotificationChannel": false
   },
-  "notificationChannelID": "Notification channel ID if you set 'inNotificationChannel' to true at least once"
+  "notificationChannelID": "Notification channel ID if you set 'inNotificationChannel' to true at least once",
+  "defaultEmbedColor": "#117ea6",
+  "deleteCommandMessages": true
 }

@@ -57,6 +57,8 @@ This is the main config file. Inside you will see several options, this is what 
   + `inConsole` (as a log to console)
   + `inNotificationChannel` (as a message sent to the notification channel)
 - `notificationChannelID`, if you set `inNotificationChannel` to `true` at least once, the channel ID to make notifications in
+- `defaultEmbedColor` is the hex color code for the default color for embeds
+- `deleteCommandMessages` if command messages and error messages should be deleted after a bit
 
 #### `games.json`
 
@@ -64,7 +66,7 @@ This is where the game names you want to use for the rotating playing game optio
 
 #### `paste.json`
 
-This file is where the meme texts are stored for the `paste` command, if you wish to add more to use with `paste` just follow the structure of the file and add them in.
+This file is where the meme texts are stored for the `paste` command, if you wish to add more to use with `paste` just follow the structure of the file and add them in. If an array is specified for one of the options then the bot will choose a random item from the array.
 
 ### - Start the bot -
 

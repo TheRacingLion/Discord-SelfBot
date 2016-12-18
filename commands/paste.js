@@ -1,13 +1,22 @@
 /*
-  Paste. Copy-paste a meme text into chat. Options are: (Add your own in config/paste.json)
-  - edgyshit, goodshit, apache
+  Paste. Copy-paste a meme text into chat. If an array is given it will choose one of its elements randomly.
+  Options are: (Add your own in config/paste.json)
+  - edgyshit, goodshit, apache, random
 */
 const paste = require('../config/paste.json')
 
-module.exports = (self, log) => {
+module.exports = (self, log, helper) => {
   self.registerCommand('paste', (msg, args) => {
-    if (!args[0]) { msg.edit('Be more specific..') } else {
-      if (Object.keys(paste).includes(args[0].toLowerCase())) { msg.edit(paste[args[0].toLowerCase()]) } else { msg.edit('Not found.') }
-    }
+    // If nothing is specified
+    if (!args[0]) return helper.delMsg(msg, 'Be more specific..')
+
+    if (Object.keys(paste).includes(args[0].toLowerCase())) {
+      let reply = paste[args[0].toLowerCase()]
+      msg.delete()
+      // Check if the paste chosen is an array
+      if (Array.isArray(reply)) {
+        msg.channel.createMessage(reply[~~(Math.random() * reply.length)])
+      } else msg.channel.createMessage(reply)
+    } else return helper.delMsg(msg, 'Not found.')
   })
 }

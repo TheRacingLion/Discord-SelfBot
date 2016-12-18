@@ -1,5 +1,5 @@
 /*
-  Created by TheRacingLion (https://github.com/TheRacingLion) [ 6 / 12 / 2016 ]
+  Created by TheRacingLion (https://github.com/TheRacingLion) [ 18 / 12 / 2016 ]
   -*Read LICENSE to know more about permissions*-
 
   Logger file. Logs to console a specified input with several options.
@@ -14,23 +14,23 @@ function configErr (text) { console.error(`\n${time}${chalk.bgRed.bold(' Config 
 function logger (bg, title, text, timed = true) { console.log(`${timed ? time : ''}${chalk[bg].bold(` ${title} `)} ${text}`) }
 
 module.exports = {
-  log: function (text, title = 'Log', bg = 'bgCyan', timed = false) { logger(bg, title, text, timed) },
-  warn: function (text) { logger('bgYellow', 'Warning', text) },
-  err: function (err, title = 'Bot') { logger('bgRed', `${title} Error`, `\n${(err && err.stack) || err}`) },
-  cmd: function (msg, self) {
+  log (text, title = 'Log', bg = 'bgCyan', timed = false) { logger(bg, title, text, timed) },
+  warn (text) { logger('bgYellow', 'Warning', text) },
+  err (err, title = 'Bot') { logger('bgRed', `${title} Error`, `\n${(err && err.stack) || err}`) },
+  cmd (msg, self) {
     if (typeof msg === 'object') {
       const cleanMsg = msg.cleanContent.replace(/\n/g, ' ')
       if (msg.author.id !== self.user.id) return
       logger('bgYellow', 'Msg', `|> ${chalk.magenta.bold(msg.guild ? msg.guild.name : 'in PMs')}: ${cleanMsg}`)
     }
   },
-  mention: function (msg) {
+  mention (msg) {
     if (typeof msg === 'object') {
       const cleanMsg = msg.cleanContent.replace(/\n/g, ' ')
-      logger('bgMagenta', 'Mention', `${chalk.bgYellow.bold(msg.guild.name)} > ${chalk.bgYellow.bold('#' + msg.channel.name)} > ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
+      logger('magenta', 'Mention', `|> ${chalk.bgYellow.bold(msg.guild.name)}|> #${chalk.bgYellow.bold(msg.channel.name)}|> ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
     }
   },
-  ready: function (self, config) {
+  ready (self, config) {
     if (self.user.id !== config.ownerID) { configErr('Invalid ownerID. This ID does not match the ID of your token. It must be YOUR discord ID.') } else {
       console.log(chalk.cyan([
         `\n/==================== Started at ${chalk.yellow(moment(self.startTime).format('H:mm:ss'))} ====================/`,
@@ -44,7 +44,7 @@ module.exports = {
       ].join('\n')))
     }
   },
-  validateConfig: function (config) {
+  validateConfig (config) {
     logger('bgCyan', 'Config', 'Checking Config File...')
     if (config.token === '' || typeof config.token !== 'string') {
       configErr('Invalid Token.')
@@ -70,6 +70,10 @@ module.exports = {
       configErr('Invalid eventNotificator -> "inNotificationChannel". (Must be either true or false)')
     } else if ((config.mentionNotificator.inNotificationChannel || config.eventNotificator.inNotificationChannel) && !(/^\d{17,18}/.test(config.notificationChannelID))) {
       configErr('Invalid notificationChannelID. Must be a channel ID from a server you are in.')
+    } else if (!/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/i.test(config.defaultEmbedColor)) {
+      configErr('Invalid defaultEmbedColor. Must be a valid hex color code.')
+    } else if (typeof config.deleteCommandMessages !== 'boolean') {
+      configErr('Invalid deleteCommandMessages. (Must be either true or false)')
     } else {
       logger('bgCyan', 'Config', 'Config is valid. Starting Bot...')
     }
