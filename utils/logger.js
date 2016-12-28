@@ -7,16 +7,22 @@
 */
 const moment = require('moment')
 const chalk = require('chalk')
-const time = `[${chalk.cyan(moment().format('H:mm:ss'))}]`
+const status = {
+  online: `${chalk.green('"online"')}`,
+  idle: `${chalk.yellow('"idle"')}`,
+  dnd: `${chalk.red('"dnd"')} (Do Not Disturb)`,
+  invisible: '"invisible"'
+}
 
-function configErr (text) { console.error(`\n${time}${chalk.bgRed.bold(' Config Error ')} ${text}\n`); process.exit() }
+function configErr (text) { console.error(`\n[${chalk.cyan(moment().format('H:mm:ss'))}]${chalk.bgRed.bold(' Config Error ')} ${text}\n`); process.exit() }
 
-function logger (bg, title, text, timed = true) { console.log(`${timed ? time : ''}${chalk[bg].bold(` ${title} `)} ${text}`) }
+function logger (bg, title, text, timed = true) { console.log(`${timed ? `[${chalk.cyan(moment().format('H:mm:ss'))}]` : ''}${chalk[bg].bold(` ${title} `)} ${text}`) }
 
 module.exports = {
   log (text, title = 'Log', bg = 'bgCyan', timed = false) { logger(bg, title, text, timed) },
   warn (text) { logger('bgYellow', 'Warning', text) },
   err (err, title = 'Bot') { logger('bgRed', `${title} Error`, `\n${(err && err.stack) || err}`) },
+  db (text) { logger('bgWhite', 'Database', text) },
   cmd (msg, self) {
     if (typeof msg === 'object') {
       const cleanMsg = msg.cleanContent.replace(/\n/g, ' ')
@@ -35,7 +41,7 @@ module.exports = {
       console.log(chalk.cyan([
         `\n/==================== Started at ${chalk.yellow(moment(self.startTime).format('H:mm:ss'))} ====================/`,
         `| Logged in as ${chalk.yellow(self.user.username)}.`,
-        `| ${chalk.white('Welcome Owner. Looking good today! Current stats:')}\n`,
+        `| ${chalk.white(`Your discord status is ${status[config.defaultStatus.toLowerCase()]}. Current stats:`)}\n`,
         `    - ${chalk.yellow(self.guilds.size)} servers (${chalk.yellow(Object.keys(self.channelGuildMap).length)} channels) (${chalk.yellow(self.users.size)} users)`,
         `    - ${chalk.yellow(self.relationships.size)} friends (${chalk.yellow(self.relationships.filter(r => r.status !== 'offline').length)} online)\n`,
         `| ${chalk.white('Logging was successful. Waiting for orders...')}`,
@@ -56,6 +62,8 @@ module.exports = {
       configErr('Invalid rotatePlayingGame. (Must be either true or false)')
     } else if (config.rotatePlayingGame && (isNaN(config.rotatePlayingGameTime) || config.rotatePlayingGameTime <= 5000)) {
       configErr('Invalid rotatePlayingGameTime. Must be a integer number bigger than 5000 (5 seconds).')
+    } else if (typeof config.defaultStatus !== 'string' || Object.keys(status).indexOf(config.defaultStatus.toLowerCase()) < 0) {
+      configErr(`Invalid defaultStatus. Must be either:\n${Object.values(status).join(', ')}`)
     } else if (typeof config.mentionNotificator !== 'object') {
       configErr('Invalid mentionNotificator. Must be an object with two options:\n\n"mentionNotificator": {\n  "inConsole": true,\n  "inNotificationChannel": true\n}')
     } else if (typeof config.mentionNotificator.inConsole !== 'boolean') {

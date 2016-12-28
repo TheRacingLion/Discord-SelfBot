@@ -27,7 +27,7 @@ IF, and only if you accept the above rules of selfbots, then you may proceed.
 Before you can download and setup the bot, there are 2 programs you need to have installed on your computer to make sure everything runs on first go:
 
 - [**Git**](https://git-scm.com/downloads)
-- [**Node JS**](https://nodejs.org/en/download/)
+- [**Node JS**](https://nodejs.org/en/download/current/)
 
 ### - Download Project Files -
 
@@ -50,6 +50,7 @@ This is the main config file. Inside you will see several options, this is what 
 - `prefix` is the desired prefix for bot commands (can use `@mention ` if you want the prefix to be your discord mention)
 - `rotatePlayingGame`, if you want your discord playing game to rotate games (from the `games.json` file)
 - `rotatePlayingGameTime`, if you do want the game to rotate, this is the time interval you want for it (in milliseconds)
+- `defaultStatus`, the default discord status to show on your account. Either "online", "idle", "dnd" (Do Not Disturb) or "invisible"
 - `mentionNotificator` (if you want to have your mentions notified)
   + `inConsole` (as a log to console)
   + `inNotificationChannel` (as a message sent to the notification channel)

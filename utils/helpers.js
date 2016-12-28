@@ -48,9 +48,10 @@ module.exports = {
         let random = colors[ keys[ keys.length * Math.random() << 0 ] ]
         color = parseInt(random.replace('#', ''), 16)
       } else if (color.toLowerCase() === 'role' && user.id) {
-        let rolePositions = msg.guild.members.get(user.id).roles.map(r => msg.guild.roles.get(r).position)
-        let toprole = rolePositions.indexOf(Math.max.apply(Math, rolePositions))
-        color = msg.guild.members.get(user.id).roles.map(r => msg.guild.roles.get(r).color)[toprole]
+        const userRoles = msg.guild.members.get(user.id).roles.map(r => msg.guild.roles.get(r)).filter(r => r.color !== 0)
+        const rolePositions = userRoles.map(r => r.position)
+        const toprole = rolePositions.indexOf(Math.max.apply(Math, rolePositions))
+        color = userRoles.map(r => r.color)[toprole]
       } else if (Object.keys(colors).includes(color.toLowerCase())) {
         color = parseInt(colors[color].replace('#', ''), 16)
       } else if (/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/i.test(color)) {

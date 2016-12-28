@@ -4,6 +4,7 @@
   "prefix": "-",
   "rotatePlayingGame": true,
   "rotatePlayingGameTime" : 150000,
+  "defaultStatus": "idle",
   "mentionNotificator": {
     "inConsole": true,
     "inNotificationChannel": true

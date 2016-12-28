@@ -27,7 +27,7 @@ self.on('ready', () => {
   if (config.rotatePlayingGame && games.length !== 0) {
     log.log('Changing playing game every ' + (config.rotatePlayingGameTime / 1000) / 60 + ' minutes.', 'Config')
     setInterval(() => {
-      self.editStatus(null, {name: games[~~(Math.random() * games.length)]})
+      self.editStatus(config.defaultStatus.toLowerCase(), {name: games[~~(Math.random() * games.length)]})
     }, config.rotatePlayingGameTime) // Edits playing game every X milliseconds (You can edit this number in the config file)
   }
 })
@@ -45,7 +45,7 @@ fs.readdir(__dirname + '/commands/', (err, files) => {
     for (let command of files) {
       if (command.endsWith('.js')) {
         command = command.replace(/\.js$/, '')
-        cmds = require(`./commands/${command}.js`)(self, log, helper)
+        cmds = require(`./commands/${command}.js`)(self, log, helper, config)
       }
     }
     log.log('Finished.', 'Cmds', 'bgGreen', true)
