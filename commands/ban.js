@@ -13,7 +13,7 @@ module.exports = (self, log, helper) => {
     let deleteDays = /\d{1}/.test(args[1]) ? parseInt(args[1], 10) : 3
 
     // Ban user
-    msg.guild.banMember(user.id, deleteDays)
+    msg.channel.guild.banMember(user.id, deleteDays)
     .then(() => helper.delMsg(msg, `🔨 - *Dropped the hammer on ${user.username}#${user.discriminator}*`))
     .catch((err) => { log.err(err, 'Ban'); helper.delMsg(msg, 'Could not ban ' + user.username) })
   }, {

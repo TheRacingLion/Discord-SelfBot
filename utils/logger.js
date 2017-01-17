@@ -28,13 +28,13 @@ module.exports = {
     if (typeof msg === 'object') {
       const cleanMsg = msg.cleanContent.replace(/\n/g, ' ')
       if (msg.author.id !== self.user.id) return
-      logger('bgYellow', 'Msg', `|> ${chalk.magenta.bold(msg.guild ? msg.guild.name : 'in PMs')}: ${cleanMsg}`)
+      logger('bgYellow', 'Msg', `|> ${chalk.magenta.bold(msg.channel.guild ? msg.channel.guild.name : 'in PMs')}: ${cleanMsg}`)
     }
   },
   mention (msg) {
     if (typeof msg === 'object') {
       const cleanMsg = msg.cleanContent.replace(/\n/g, ' ')
-      logger('magenta', 'Mention', `|> ${chalk.bgYellow.bold(msg.guild.name)}|> #${chalk.bgYellow.bold(msg.channel.name)}|> ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
+      logger('magenta', 'Mention', `|> ${chalk.bgYellow.bold(msg.channel.guild.name)}|> #${chalk.bgYellow.bold(msg.channel.name)}|> ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
     }
   },
   ready (self, config) {

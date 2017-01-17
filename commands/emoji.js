@@ -22,7 +22,7 @@ module.exports = (self, log, helper) => {
         if (res.body && res.statusCode === 200) {
           const buf = res.body
           const type = buf[0] === 0xFF && buf[1] === 0xD8 && buf[2] === 0xFF ? 'data:image/jpeg;base64,' : 'data:image/png;base64,'
-          self.createGuildEmoji(msg.guild.id, { name: args[1], image: `${type}${res.body.toString('base64')}` })
+          self.createGuildEmoji(msg.channel.guild.id, { name: args[1], image: `${type}${res.body.toString('base64')}` })
           .then(e => helper.delMsg(msg, `**Guild Emoji created!**\nName: \`:${e.name}:\``))
           .catch(err => { log.err(err, 'Emoji'); helper.delMsg(msg, 'There was an error.') })
         }
@@ -31,16 +31,16 @@ module.exports = (self, log, helper) => {
     // If the user wants to "remove" a guild emoji
     } else if (args[0] === 'remove') {
       if (!args[1]) return helper.delMsg(msg, 'No emoji specified.')
-      if (msg.guild.emojis.length > 0) {
-        self.deleteGuildEmoji(msg.guild.id, /<:\w+:(\d+)>/.exec(args[1])[1])
+      if (msg.channel.guild.emojis.length > 0) {
+        self.deleteGuildEmoji(msg.channel.guild.id, /<:\w+:(\d+)>/.exec(args[1])[1])
         .then(() => helper.delMsg(msg, `**Guild Emoji Deleted!**\nWas: \`${args[1]}\``))
         .catch(err => { log.err(err, 'Emoji'); helper.delMsg(msg, 'There was an error.') })
       } else return helper.delMsg(msg, 'This guild has no custom Emojis.')
 
     // If the user wants to "list" all emojis
     } else if (args[0] === 'list') {
-      if (msg.guild.emojis.length > 0) {
-        msg.edit(`**Emojis:** ${msg.guild.emojis.map(e => `\`:${e.name}:\``).join(', ')}`)
+      if (msg.channel.guild.emojis.length > 0) {
+        msg.edit(`**Emojis:** ${msg.channel.guild.emojis.map(e => `\`:${e.name}:\``).join(', ')}`)
       } else return helper.delMsg(msg, 'This guild has no custom Emojis.')
     }
   }, {

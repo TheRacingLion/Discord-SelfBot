@@ -11,7 +11,7 @@ module.exports = (self, log, helper) => {
     if (!user) return helper.delMsg(msg, 'That is not a valid guild member. Need to specify a name, an ID or mention the user.')
 
     // Kick user
-    msg.guild.kickMember(user.id)
+    msg.channel.guild.kickMember(user.id)
     .then(() => helper.delMsg(msg, '👌'))
     .catch((err) => { log.err(err, 'Kick'); helper.delMsg(msg, 'Could not kick ' + user.username) })
   }, {

@@ -13,13 +13,13 @@ module.exports = {
     } else msg.edit(text)
   },
   findMember (msg, str) {
-    if (!msg.guild) return msg.mentions[0] ? msg.mentions[0] : false
+    if (!msg.channel.guild) return msg.mentions[0] ? msg.mentions[0] : false
     if (/^\d{17,18}/.test(str) || /^<@!?\d{17,18}>/.test(str)) {
-      const member = msg.guild.members.get(/^<@!?\d{17,18}>/.test(str) ? str.replace(/<@!?/, '').replace('>', '') : str)
+      const member = msg.channel.guild.members.get(/^<@!?\d{17,18}>/.test(str) ? str.replace(/<@!?/, '').replace('>', '') : str)
       if (!member) { return false } else { return member.user }
     } else if (/.{1,33}/.test(str)) {
       const isMemberName = (name, str) => name === str || name.startsWith(str) || name.includes(str)
-      const member = msg.guild.members.find(m => {
+      const member = msg.channel.guild.members.find(m => {
         if (m.nick && isMemberName(m.nick.toLowerCase(), str.toLowerCase())) return true
         return isMemberName(m.user.username.toLowerCase(), str.toLowerCase())
       })
@@ -48,8 +48,8 @@ module.exports = {
         const keys = Object.keys(colors)
         let random = colors[ keys[ keys.length * Math.random() << 0 ] ]
         color = parseInt(random.replace('#', ''), 16)
-      } else if (color.toLowerCase() === 'role' && user.id && msg.guild) {
-        const userRoles = msg.guild.members.get(user.id).roles.map(r => msg.guild.roles.get(r)).filter(r => r.color !== 0)
+      } else if (color.toLowerCase() === 'role' && user.id && msg.channel.guild) {
+        const userRoles = msg.channel.guild.members.get(user.id).roles.map(r => msg.channel.guild.roles.get(r)).filter(r => r.color !== 0)
         const rolePositions = userRoles.map(r => r.position)
         const toprole = rolePositions.indexOf(Math.max.apply(Math, rolePositions))
         color = userRoles.map(r => r.color)[toprole]

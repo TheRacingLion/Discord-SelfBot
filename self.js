@@ -16,7 +16,7 @@ const log = require('./utils/logger.js')
 log.validateConfig(config)
 
 // Setup discord client with selfbot options
-const self = new Eris.CommandClient(config.token, {autoreconnect: true}, {
+const self = new Eris.CommandClient(config.token, { autoreconnect: true }, {
   defaultCommandOptions: {caseInsensitive: true, requirements: {userIDs: [config.ownerID]}},
   defaultHelpCommand: false,
   prefix: config.prefix,

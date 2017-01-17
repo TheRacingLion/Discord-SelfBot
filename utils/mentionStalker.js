@@ -8,7 +8,7 @@ const moment = require('moment')
 
 module.exports = (self, log, config) => {
   self.on('messageCreate', (msg) => {
-    if (msg.author.id !== self.user.id && msg.guild && ~msg.content.indexOf(self.user.id)) {
+    if (msg.author.id !== self.user.id && msg.channel.guild && ~msg.content.indexOf(self.user.id)) {
       if (config.mentionNotificator.inConsole) { log.mention(msg) }
       if (config.mentionNotificator.inNotificationChannel) {
         if (Object.keys(self.channelGuildMap).includes(config.notificationChannelID)) {
@@ -23,7 +23,7 @@ module.exports = (self, log, config) => {
                 color: 16426522,
                 author: { name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`, icon_url: msg.author.avatarURL },
                 fields: [
-                  { name: 'Guild', value: `${msg.guild.name}\n(${msg.guild.id})`, inline: true },
+                  { name: 'Guild', value: `${msg.channel.guild.name}\n(${msg.channel.guild.id})`, inline: true },
                   { name: 'Channel', value: `#${msg.channel.name}\n(${msg.channel.id})`, inline: true },
                   { name: 'Msg', value: `(${msg.id})`, inline: true }
                 ]

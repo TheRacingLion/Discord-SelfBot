@@ -1,6 +1,6 @@
 {
   "name": "Discord_Selfbot",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A selfbot created for discord. It is setup and ready to go in less than 5 min.",
   "keywords": ["discord", "self", "bot"],
   "license": "MIT",
