@@ -6,6 +6,7 @@
 */
 const Eris = require('eris')
 const fs = require('fs')
+const path = require('path')
 const config = require('./config/config.json')
 const games = require('./config/games.json')
 const helper = require('./utils/helpers.js')
@@ -14,7 +15,7 @@ const log = require('./utils/logger.js')
 // Check if config is valid
 log.validateConfig(config)
 
-// Setup discord client
+// Setup discord client with selfbot options
 const self = new Eris.CommandClient(config.token, {autoreconnect: true}, {
   defaultCommandOptions: {caseInsensitive: true, requirements: {userIDs: [config.ownerID]}},
   defaultHelpCommand: false,
@@ -22,33 +23,60 @@ const self = new Eris.CommandClient(config.token, {autoreconnect: true}, {
   ignoreSelf: false
 })
 
+// Event handling
+self.on('warn', (msg) => log.warn(msg))
+self.on('error', (err) => log.err(err, 'Bot'))
+self.on('disconnect', () => log.log('Disconnected from Discord', 'Disconnect'))
+
+// Load avatar images (if any)
+let avatars = []
+const dir = path.join(__dirname, 'config/avatars/')
+fs.readdir(dir, (err, files) => {
+  log.fs(`Loading ${files.length} avatar images...`, 'Avatars')
+  if (err) return log.err(err, 'Avatars Directory Reading')
+  if (!files) { return log.err('No avatar images found.', 'Avatars Directory Reading') } else {
+    for (let avatar of files) {
+      if (path.extname(avatar) !== '.png') return
+      try {
+        let data = fs.readFileSync(path.join(dir, avatar))
+        log.fs(`Loaded: ${avatar}`, 'Avatars')
+        avatars.push(new Buffer(data).toString('base64'))
+      } catch (err) { log.err(err, 'Avatars Directory Reading') }
+    }
+    if (avatars.length === 0) return log.fs('No avatar images found.', 'Avatars')
+    log.fs('Finished.', 'Avatars')
+  }
+})
+
+// Load command files
+let cmds = {} // eslint-disable-line
+fs.readdir(path.join(__dirname, 'commands/'), (err, files) => {
+  log.fs(`Loading ${files.length} command files...`, 'Cmds')
+  if (err) return log.err(err, 'Command Directory Reading')
+  if (!files) { log.err('No command files.', 'Command Directory Reading') } else {
+    for (let command of files) {
+      if (path.extname(command) !== '.js') return
+      cmds = require(`./commands/${command}`)(self, log, helper, config)
+    }
+    log.fs('Finished.', 'Cmds')
+  }
+})
+
+// On ready
 self.on('ready', () => {
   log.ready(self, config)
-  if (config.rotatePlayingGame && games.length !== 0) {
+  if (config.rotatePlayingGame && games.length > 0) {
     log.log('Changing playing game every ' + (config.rotatePlayingGameTime / 1000) / 60 + ' minutes.', 'Config')
     setInterval(() => {
       self.editStatus(config.defaultStatus.toLowerCase(), {name: games[~~(Math.random() * games.length)]})
     }, config.rotatePlayingGameTime) // Edits playing game every X milliseconds (You can edit this number in the config file)
   }
-})
-
-self.on('warn', (msg) => log.warn(msg))
-
-self.on('error', (err) => log.err(err, 'Bot'))
-
-self.on('disconnect', () => log.log('Disconnected from Discord', 'Disconnect'))
-
-let cmds = {} // eslint-disable-line
-fs.readdir(__dirname + '/commands/', (err, files) => {
-  log.log(`Loading ${files.length} command files...`, 'Cmds', 'bgGreen', true)
-  if (err) { log.err(err, 'Command Directory Reading') } else if (!files) { log.err('No command files.', 'Command Directory Reading') } else {
-    for (let command of files) {
-      if (command.endsWith('.js')) {
-        command = command.replace(/\.js$/, '')
-        cmds = require(`./commands/${command}.js`)(self, log, helper, config)
-      }
-    }
-    log.log('Finished.', 'Cmds', 'bgGreen', true)
+  if (config.rotateAvatarImage && avatars.length > 0) {
+    log.log('Changing avatar every ' + (config.rotateAvatarImageTime / 1000) / 60 + ' minutes.', 'Config')
+    setInterval(() => {
+      log.log('Changing avatar')
+      self.editSelf({avatar: 'data:image/png;base64,' + avatars[Math.floor(Math.random() * avatars.length)]})
+    }, config.rotateAvatarImageTime) // Edits avatar every X milliseconds (You can edit this number in the config file)
   }
 })
 

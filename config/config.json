@@ -4,6 +4,8 @@
   "prefix": "-",
   "rotatePlayingGame": true,
   "rotatePlayingGameTime" : 150000,
+  "rotateAvatarImage": true,
+  "rotateAvatarImageTime" : 400000,
   "defaultStatus": "idle",
   "mentionNotificator": {
     "inConsole": true,

@@ -1,0 +1,10 @@
+/* AVATAR ROTATOR */
+
+// Work in progress
+
+- At the moment it only supports .png images, in the future it will support a lot more
+
+- Only have to drag and drop .png images into the folder
+
+- You can just leave this file here, it will not effect the avatar rotator
+
