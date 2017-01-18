@@ -65,7 +65,7 @@ module.exports = {
       configErr('Invalid rotatePlayingGameTime. Must be a integer number bigger than 5000 (5 seconds).')
     } else if (typeof config.rotateAvatarImage !== 'boolean') {
       configErr('Invalid rotateAvatarImage. (Must be either true or false)')
-    } else if (config.rotateAvatarImage && (isNaN(config.rotateAvatarImageTime) || config.rotateAvatarImageTime <= 300000)) {
+    } else if (config.rotateAvatarImage && (isNaN(config.rotateAvatarImageTime) || config.rotateAvatarImageTime < 600000)) {
       configErr('Invalid rotateAvatarImageTime. Must be a integer number bigger than 300000 (5 minutes).')
     } else if (typeof config.defaultStatus !== 'string' || Object.keys(status).indexOf(config.defaultStatus.toLowerCase()) < 0) {
       configErr(`Invalid defaultStatus. Must be either:\n${Object.values(status).join(', ')}`)

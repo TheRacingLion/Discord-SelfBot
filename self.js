@@ -36,11 +36,12 @@ fs.readdir(dir, (err, files) => {
   if (err) return log.err(err, 'Avatars Directory Reading')
   if (!files) { return log.err('No avatar images found.', 'Avatars Directory Reading') } else {
     for (let avatar of files) {
-      if (path.extname(avatar) !== '.png') return
+      let ext = path.extname(avatar).match(/\.png|\.jpeg|\.gif|\.jpg/)
+      if (!ext) continue
       try {
         let data = fs.readFileSync(path.join(dir, avatar))
         log.fs(`Loaded: ${avatar}`, 'Avatars')
-        avatars.push(new Buffer(data).toString('base64'))
+        avatars.push(`data:image/${ext.replace('.', '')};base64,` + new Buffer(data).toString('base64'))
       } catch (err) { log.err(err, 'Avatars Directory Reading') }
     }
     if (avatars.length === 0) return log.fs('No avatar images found.', 'Avatars')
@@ -55,7 +56,7 @@ fs.readdir(path.join(__dirname, 'commands/'), (err, files) => {
   if (err) return log.err(err, 'Command Directory Reading')
   if (!files) { log.err('No command files.', 'Command Directory Reading') } else {
     for (let command of files) {
-      if (path.extname(command) !== '.js') return
+      if (path.extname(command) !== '.js') continue
       cmds = require(`./commands/${command}`)(self, log, helper, config)
     }
     log.fs('Finished.', 'Cmds')
@@ -75,7 +76,7 @@ self.on('ready', () => {
     log.log('Changing avatar every ' + (config.rotateAvatarImageTime / 1000) / 60 + ' minutes.', 'Config')
     setInterval(() => {
       log.log('Changing avatar')
-      self.editSelf({avatar: 'data:image/png;base64,' + avatars[Math.floor(Math.random() * avatars.length)]})
+      self.editSelf({avatar: avatars[Math.floor(Math.random() * avatars.length)]}).catch(err => log.err(err, 'Avatar Rotator'))
     }, config.rotateAvatarImageTime) // Edits avatar every X milliseconds (You can edit this number in the config file)
   }
 })
