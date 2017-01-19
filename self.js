@@ -41,7 +41,7 @@ fs.readdir(dir, (err, files) => {
       try {
         let data = fs.readFileSync(path.join(dir, avatar))
         log.fs(`Loaded: ${avatar}`, 'Avatars')
-        avatars.push(`data:image/${ext.replace('.', '')};base64,` + new Buffer(data).toString('base64'))
+        avatars.push(`data:image/${ext[0].replace('.', '')};base64,` + new Buffer(data).toString('base64'))
       } catch (err) { log.err(err, 'Avatars Directory Reading') }
     }
     if (avatars.length === 0) return log.fs('No avatar images found.', 'Avatars')
