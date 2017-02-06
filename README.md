@@ -10,13 +10,24 @@
     [![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 </div><br />
 
+1. [Before Setup](#before-setup)
+2. [SelfBot Setup](#selfbot-setup)
+  - [Install Required Programs](#--install-required-programs--)
+  - [Download Project Files](#--download-project-files--)
+  - [Setup Config Files](#--setup-config-files--)
+  - [Start the Bot](#--start-the-bot--)
+    - [Windows](#windows)
+    - [Linux / Mac](#linux-and-mac)
+3. [Commands](#commands)
+4. [License](#license)
+
 # Before Setup
 
 Please remember that selfbots arent fully suported by Discord and that it should only be used to make YOUR life easier and not others. Also keep in mind that discord has a set of semi-offical rules regarding selfbots:
 
 + A selfbot must not, under any circumstance, respond to other user's messages. This means it should not respond to commands, should not autoreply to certain keywords, etc. You must be the only one that can control it.
-+ A selfbot must not, under any circumstance, do "invite scraping". This is the action of detecting server invites in chat, and automatically joining a server using that invite. That is akin to creating a virus, and it is not acceptable.
-+ As selfbots run under your account they are subject to the same Terms of Service. That is to say, they should not spam, insult or demean others, post NSFW material, spread viruses or illegal material, etc. They have to follow the same rules that you follow.
++ A selfbot must not, under any circumstance, do "invite scraping". This is the action of detecting server invites in chat, and automatically joining a server using that invite.
++ As selfbots run under your account they are subject to the same Terms of Service. Meaning they should not spam, insult or demean others, post NSFW material, spread viruses or illegal material, etc. They have to follow the same rules that you follow.
 
 IF, and only if you accept the above rules of selfbots, then you may proceed.
 
@@ -31,7 +42,7 @@ Before you can download and setup the bot, there are 2 programs you need to have
 
 ### - Download Project Files -
 
-After you have the required programs installed, you can go ahead and download the ZIP folder that has all project files. Once you finish downloading it, unzip it and you will be ready to setup the config files.
+After you have the required programs installed, you can go ahead and download the project files. To do that, you either download the ZIP folder or do `git clone https://github.com/TheRacingLion/Discord-SelfBot.git` if you are a console person. Once you finish downloading it you will be ready to setup the config files.
 
 ### - Setup Config Files -
 
@@ -73,10 +84,17 @@ This file is where the meme texts are stored for the `paste` command, if you wis
 
 ### - Start the bot -
 
-When you have the required programs installed, have all project files, and have setup config files, you can open the `installer.bat` file. This will install the required node modules (so you dont have to do it yourself) and then start the bot up. If you did everything correctly, the bot should start up fine.
+When you have the required programs installed, have all project files, and have setup config files you can start the bot:
 
-#### `installer.bat`
+#### Windows
+
+Open the `installer.bat` file. This will install the required node modules (so you dont have to do it yourself) and create a `run.bat` file. You can use this file to start the bot. If you did everything correctly, the bot should start up fine.
+
 If for some reason you have ran `installer.bat`, it disapeared and it didnt create `run.bat`, then re-download `installer.bat` and try again. Most likely either git or node were not installed correctly. Check if they work and try again.
+
+#### Linux / Mac
+
+Executable files are kind of weird in linux, and users most likely use console to do their work, so to setup this selfbot on linux or mac open a terminal in the directory you downloaded the files to and type `npm i`. Once it is finished you can start the selfbot by using `npm start` or `node self.js`. If you did everything correctly, the bot should start up fine.
 
 # Commands
 
@@ -84,7 +102,7 @@ All commands get logged to console, are case insensentive and are tested to see 
 
 ### - Default Commands -
 
-There are 13 default commands that come with the bot. (Each command is explained inside their own file.) Check out all commands and how they work [**here.**](https://github.com/TheRacingLion/Discord-SelfBot/wiki)
+The bot has several default commands. (Each command is explained inside their own file.) You can find a detailed command list [**here.**](https://github.com/TheRacingLion/Discord-SelfBot/wiki)
 
 ### - Creating Commands -
 
