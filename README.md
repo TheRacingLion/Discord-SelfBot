@@ -10,6 +10,8 @@
     [![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 </div><br />
 
+## Index
+
 1. [Before Setup](#before-setup)
 2. [SelfBot Setup](#selfbot-setup)
   - [Install Required Programs](#--install-required-programs--)
@@ -17,7 +19,7 @@
   - [Setup Config Files](#--setup-config-files--)
   - [Start the Bot](#--start-the-bot--)
     - [Windows](#windows)
-    - [Linux / Mac](#linux-and-mac)
+    - [Linux / Mac](#linux--mac)
 3. [Commands](#commands)
 4. [License](#license)
 
