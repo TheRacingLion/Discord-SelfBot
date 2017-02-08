@@ -63,6 +63,7 @@ This is the main config file. Inside you will see several options, this is what 
 - `prefix` is the desired prefix for bot commands (can use `@mention ` if you want the prefix to be your discord mention)
 - `rotatePlayingGame`, if you want your discord playing game to rotate games (from the `games.json` file)
 - `rotatePlayingGameTime`, if you do want the game to rotate, this is the time interval you want for it (in milliseconds)
+- `rotatePlayingGameInStreamingStatus`, if you do want the game to rotate, if you want it to rotate in streaming status
 - `rotateAvatarImage`, if you want your discord avatar image to rotate (from the images in `config/avatars` folder)
 - `rotateAvatarImageTime`, if you do want the avatar to rotate, this is the time interval you want for it (in milliseconds)
 - `defaultStatus`, the default discord status to show on your account. Either "online", "idle", "dnd" (Do Not Disturb) or "invisible"

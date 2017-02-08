@@ -63,6 +63,8 @@ module.exports = {
       configErr('Invalid rotatePlayingGame. (Must be either true or false)')
     } else if (config.rotatePlayingGame && (isNaN(config.rotatePlayingGameTime) || config.rotatePlayingGameTime <= 5000)) {
       configErr('Invalid rotatePlayingGameTime. Must be a integer number bigger than 5000 (5 seconds).')
+    } else if (typeof config.rotatePlayingGameInStreamingStatus !== 'boolean') {
+      configErr('Invalid rotatePlayingGameInStreamingStatus. (Must be either true or false)')
     } else if (typeof config.rotateAvatarImage !== 'boolean') {
       configErr('Invalid rotateAvatarImage. (Must be either true or false)')
     } else if (config.rotateAvatarImage && (isNaN(config.rotateAvatarImageTime) || config.rotateAvatarImageTime < 600000)) {

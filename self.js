@@ -67,9 +67,11 @@ fs.readdir(path.join(__dirname, 'commands/'), (err, files) => {
 self.on('ready', () => {
   log.ready(self, config)
   if (config.rotatePlayingGame && games.length > 0) {
-    log.log('Changing playing game every ' + (config.rotatePlayingGameTime / 1000) / 60 + ' minutes.', 'Config')
+    const stream = config.rotatePlayingGameInStreamingStatus
+    log.log(`Changing playing game ${stream ? 'in streaming status ' : ''}every ` + (config.rotatePlayingGameTime / 1000) / 60 + ' minutes.', 'Config')
     setInterval(() => {
-      self.editStatus(config.defaultStatus.toLowerCase(), {name: games[~~(Math.random() * games.length)]})
+      const game = games[~~(Math.random() * games.length)]
+      self.editStatus(config.defaultStatus.toLowerCase(), stream ? {name: game, type: 1, url: 'https://www.twitch.tv/twitch'} : {name: game})
     }, config.rotatePlayingGameTime) // Edits playing game every X milliseconds (You can edit this number in the config file)
   }
   if (config.rotateAvatarImage && avatars.length > 0) {
