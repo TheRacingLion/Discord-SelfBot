@@ -9,8 +9,8 @@ const moment = require('moment')
 module.exports = (self, log, config) => {
   self.on('messageCreate', (msg) => {
     if (msg.author.id !== self.user.id && msg.channel.guild && ~msg.content.indexOf(self.user.id)) {
-      if (!config.mentionNotificator.logBlocked && self.relationships.has(msg.user.id)) {
-        if (self.relationships.get(msg.user.id).type === 2) { return }
+      if (!config.mentionNotificator.logBlocked && self.relationships.has(msg.author.id)) {
+        if (self.relationships.get(msg.author.id).type === 2) { return }
       }
       if (config.mentionNotificator.inConsole) { log.mention(msg) }
       if (config.mentionNotificator.inNotificationChannel) {
