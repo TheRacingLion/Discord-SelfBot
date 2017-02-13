@@ -10,7 +10,8 @@
   "defaultStatus": "idle",
   "mentionNotificator": {
     "inConsole": true,
-    "inNotificationChannel": true
+    "inNotificationChannel": true,
+    "logBlockedUsers": false
   },
   "eventNotificator": {
     "inConsole": true,
