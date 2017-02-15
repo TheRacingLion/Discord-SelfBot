@@ -8,7 +8,7 @@
   <h1 align="center">~ Discord Selfbot ~</h1>
     **A selfbot for discord that is setup and ready to go in less than 5 min.**<br />(If you already have the required programs installed)<br /><br />
     [![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-</div><br />
+</div>
 
 ## Index
 
