@@ -2,29 +2,88 @@
   Created by TheRacingLion (https://github.com/TheRacingLion) [ 18 / 12 / 2016 ]
   -*Read LICENSE to know more about permissions*-
 
-  Main Selfbot file. Events and setting up the discord client.
+  Main Selfbot file. Lots of really important stuff that make this selfbot work.
 */
 const Eris = require('eris')
-const fs = require('fs')
 const path = require('path')
+const fs = require('fs')
+
+const configValidator = require('./src/utils/ConfigValidator.js')
+const constants = require('./src/utils/Constants.js')
+const log = require('./src/plugins/Logger.js')
+
 const config = require('./config/config.json')
 const games = require('./config/games.json')
-const helper = require('./utils/helpers.js')
-const log = require('./utils/logger.js')
+
+const Command = require('./src/Command.js')
 
 // Check if config is valid
-log.validateConfig(config)
+configValidator.check(config, log)
 
-// Setup discord client with selfbot options
-const self = new Eris.CommandClient(config.token, { autoreconnect: true }, {
-  defaultCommandOptions: {caseInsensitive: true, requirements: {userIDs: [config.ownerID]}},
-  defaultHelpCommand: false,
-  prefix: config.prefix,
-  ignoreSelf: false
+// Setup discord client
+const self = new Eris(config.token)
+let isReady = false
+
+// Pass config and constants to self
+self.constants = constants
+self.config = config
+
+const commands = {
+  main: {},
+  aliases: {}
+}
+
+// Register Command Function
+self.registerCommand = function (name, generator, options) {
+  if (!name) {
+    throw new Error('You must specify a name for the command')
+  }
+  if (name.includes(' ')) {
+    throw new Error('Command names cannot contain spaces')
+  }
+  if (commands.main[name]) {
+    throw new Error('You have already registered a command for ' + name)
+  }
+  options = options || {}
+  name = name.toLowerCase()
+  commands.main[name] = new Command(self, name, generator, options)
+  if (options.aliases && options.aliases.length > 0) {
+    options.aliases.forEach((alias) => {
+      commands.aliases[alias] = name
+    })
+  }
+  return commands.main[name]
+}
+
+self.on('messageCreate', (msg) => {
+  if (!isReady) return
+  // Only reply to owner
+  if (msg.author.id !== self.user.id) return
+  // Get prefix and check for it
+  const prefix = self.config.prefix.replace(/@mention/g, self.user.mention)
+  if (msg.content.replace(/<@!/g, '<@').startsWith(prefix)) {
+    // Only if isnt empty command
+    if (msg.content.length === prefix.length) return
+
+    // Get trigger and args
+    const args = msg.content.replace(/<@!/g, '<@').substring(prefix.length).split(' ')
+    let trigger = args.shift().toLowerCase()
+    trigger = commands.aliases[trigger] || trigger
+
+    // Get command and run it
+    const command = commands.main[trigger]
+    if (command !== undefined) {
+      log.cmd(msg, self)
+      setTimeout(() => self.deleteMessage(msg.channel.id, msg.id), 750)
+      command.process(msg, args)
+    }
+    return
+  }
+  return
 })
 
 // Event handling
-self.on('warn', (msg) => log.warn(msg))
+self.on('warn', (msg) => { if (msg.includes('Authentication')) { log.warn(msg) } })
 self.on('error', (err) => log.err(err, 'Bot'))
 self.on('disconnect', () => log.log('Disconnected from Discord', 'Disconnect'))
 
@@ -32,7 +91,7 @@ self.on('disconnect', () => log.log('Disconnected from Discord', 'Disconnect'))
 let avatars = []
 const dir = path.join(__dirname, 'config/avatars/')
 fs.readdir(dir, (err, files) => {
-  log.fs(`Loading ${files.length} avatar images...`, 'Avatars')
+  log.fs(`Loading ${files.length} files...`, 'Avatars')
   if (err) return log.err(err, 'Avatars Directory Reading')
   if (!files) { return log.err('No avatar images found.', 'Avatars Directory Reading') } else {
     for (let avatar of files) {
@@ -44,7 +103,7 @@ fs.readdir(dir, (err, files) => {
         avatars.push(`data:image/${ext[0].replace('.', '')};base64,` + new Buffer(data).toString('base64'))
       } catch (err) { log.err(err, 'Avatars Directory Reading') }
     }
-    if (avatars.length === 0) return log.fs('No avatar images found.', 'Avatars')
+    if (avatars.length === 0) return log.fs('No images found.', 'Avatars')
     log.fs('Finished.', 'Avatars')
   }
 })
@@ -57,7 +116,7 @@ fs.readdir(path.join(__dirname, 'commands/'), (err, files) => {
   if (!files) { log.err('No command files.', 'Command Directory Reading') } else {
     for (let command of files) {
       if (path.extname(command) !== '.js') continue
-      cmds = require(`./commands/${command}`)(self, log, helper, config)
+      cmds = require(`./commands/${command}`)(self)
     }
     log.fs('Finished.', 'Cmds')
   }
@@ -65,6 +124,8 @@ fs.readdir(path.join(__dirname, 'commands/'), (err, files) => {
 
 // On ready
 self.on('ready', () => {
+  isReady = true
+  self.commands = commands
   log.ready(self, config)
   if (config.rotatePlayingGame && games.length > 0) {
     const stream = config.rotatePlayingGameInStreamingStatus
@@ -83,9 +144,7 @@ self.on('ready', () => {
   }
 })
 
-self.on('messageCreate', (msg) => { if (msg.author.id === self.user.id) { if (msg.command) { log.cmd(msg, self) } } })
-
-require('./utils/mentionStalker.js')(self, log, config)
+require('./src/plugins/MentionStalker.js')(self, log, config)
 
 self.connect().catch(err => log.err(err, 'Login'))
 

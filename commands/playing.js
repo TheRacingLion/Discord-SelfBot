@@ -5,9 +5,9 @@
   If you have auto game rotation set to "true", this command is pretty useless, cause if you use it, when the auto rotate comes, it will just override it.
   You can fix this by turning auto game rotation to false in config.json and then just setting a game yourself.
 */
-module.exports = (self, log, helper, config) => {
-  self.registerCommand('playing', (msg, args) => {
-    self.editStatus(config.defaultStatus.toLowerCase(), args ? {name: args.join(' ')} : null)
-    helper.delMsg(msg, '👌')
+module.exports = (self) => {
+  self.registerCommand('playing', function (msg, args) {
+    this.self.editStatus(this.config.defaultStatus.toLowerCase(), args ? {name: args.join(' ')} : null)
+    this.send(msg, '👌')
   })
 }

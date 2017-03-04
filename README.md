@@ -48,11 +48,16 @@ After you have the required programs installed, you can go ahead and download th
 
 ### - Setup Config Files -
 
-Once you download the project files you will see a folder named `config`. Inside of it will be 3 files:
+Once you download the project files you will see a folder named `config`. Inside of it will be 3 files and 1 folder:
 
+- `avatars`
 - `config.json`
 - `games.json`
 - `paste.json`
+
+#### `avatars`
+
+This is the folder where you drag and drop your avatar images to, if you enabled avatar rotating.
 
 #### `config.json`
 
@@ -70,12 +75,14 @@ This is the main config file. Inside you will see several options, this is what 
 - `mentionNotificator` (if you want to have your mentions notified)
   + `inConsole` (as a log to console)
   + `inNotificationChannel` (as a message sent to the notification channel)
+  + `logBlockedUsers` (if you want users you blocked to be logged or not)
 - `eventNotificator` (if you want to have events like guild creations, or friend requests notified)
   + `inConsole` (as a log to console)
   + `inNotificationChannel` (as a message sent to the notification channel)
 - `notificationChannelID`, if you set `inNotificationChannel` to `true` at least once, the channel ID to make notifications in
 - `defaultEmbedColor` is the hex color code for the default color for embeds
 - `deleteCommandMessages` if command messages and error messages should be deleted after a bit
+- `deleteCommandMessagesTime` if you do want the command messages deleted, this is the time the bot should wait before doing it (in milliseconds)
 
 #### `games.json`
 
@@ -109,35 +116,34 @@ The bot has several default commands. (Each command is explained inside their ow
 
 ### - Creating Commands -
 
-When you want to create a new command, just add a new file to the `commands` folder and name it something like `mycommand.js` and then follow this basic structure:
+When you want to create a new command, just add a new file to the `commands` folder and name it something like `mycommand.js` and then follow the basic structure bellow. If your command needs some kind of special options like permissions or you just want to set it to be used on guilds only, then you can use the pre-made command options shown bellow. Thhere are also some helper functions built in to the function.
 
 ```js
 /*
   Optional comment string to describe the command.
 */
-module.exports = (self, log) => {
-  self.registerCommand('mycommand', (msg, args) => {
+module.exports = (self) => {
+  self.registerCommand('mycommand', function (msg, args) {
     // Do something with msg or args
-  })
-}
-```
 
-If your command needs some kind of special options like permissions or you just want to set it to be used on guilds only, then you can use the pre-made command options that come with [**Eris Command Client**](https://abal.moe/Eris/docs/CommandClient#function-registerCommand), like:
+    this.send(msg, 'This is some text', deleteDelay) // Send a message
 
-```js
-module.exports = (self, log) => {
-  self.registerCommand('mycommand', (msg, args) => {
-    // Do something with msg or args
+    this.embed(msg, { // Send an embed
+      title: 'Embed title',
+      description: 'Embed description',
+      color: 4627433
+    }, deleteDelay)
+
+    this.findMember(msg, args[0]) // Find a guild member
   }, {
-    guildOnly: true, // Will only work on guilds (No PM's)
-    requirements: { // Requirements for the command to work
-      permissions: {
-        'manageChannels': true, // Will only do the command if you have the "Manage channels" permission
-        'manageNicknames': true // Will only do the command if you have the "Manage Nicknames" permission
-      }
-    }
+    noPms: false, // Will only work on guilds (No PM's)
+    aliases: ['cmd', 'mycmd'], // Will make "cmd" and "mycmd" be an alias of "mycommand"
+    perms: [ // Will only do the command if you have the "Manage channels" AND the "Manage Nicknames" permissions
+      'manageChannels',
+      'manageNicknames'
+    ],
+    deleteAfter: false // Delete the command message after the command was done or not
   })
-  self.registerCommandAlias('mycmd', 'mycommand') // will make "mycmd" be an alias of "mycommand"
 }
 ```
 

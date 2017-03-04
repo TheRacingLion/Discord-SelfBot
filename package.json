@@ -1,6 +1,6 @@
 {
   "name": "Discord_Selfbot",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "A selfbot created for discord. It is setup and ready to go in less than 5 min.",
   "keywords": ["discord", "self", "bot"],
   "license": "MIT",
@@ -15,10 +15,10 @@
   },
   "bugs": {
     "url": "https://github.com/TheRacingLion/Discord-SelfBot/issues"
-	},
-	"engines": {
-		"node": ">=6.0.0"
-	},
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "dependencies": {
     "eris": ">=0.5.0",
     "chalk": "^1.1.3",
