@@ -28,6 +28,12 @@ let isReady = false
 self.constants = constants
 self.config = config
 
+const counts = {
+  msgsGot: 0,
+  msgsSent: 0,
+  mentionsGot: 0
+}
+
 const commands = {
   main: {},
   aliases: {}
@@ -56,7 +62,8 @@ self.registerCommand = function (name, generator, options) {
 }
 
 self.on('messageCreate', (msg) => {
-  if (!isReady) return
+  counts.msgsGot = counts.msgsGot + 1
+  if (!isReady || !msg.author) return
   // Only reply to owner
   if (msg.author.id !== self.user.id) return
   // Get prefix and check for it
@@ -89,24 +96,26 @@ self.on('disconnect', () => log.log('Disconnected from Discord', 'Disconnect'))
 
 // Load avatar images (if any)
 let avatars = []
-const dir = path.join(__dirname, 'config/avatars/')
-fs.readdir(dir, (err, files) => {
-  log.fs(`Loading ${files.length} files...`, 'Avatars')
-  if (err) return log.err(err, 'Avatars Directory Reading')
-  if (!files) { return log.err('No avatar images found.', 'Avatars Directory Reading') } else {
-    for (let avatar of files) {
-      let ext = path.extname(avatar).match(/\.png|\.jpeg|\.gif|\.jpg/)
-      if (!ext) continue
-      try {
-        let data = fs.readFileSync(path.join(dir, avatar))
-        log.fs(`Loaded: ${avatar}`, 'Avatars')
-        avatars.push(`data:image/${ext[0].replace('.', '')};base64,` + new Buffer(data).toString('base64'))
-      } catch (err) { log.err(err, 'Avatars Directory Reading') }
+if (config.rotateAvatarImage) {
+  const dir = path.join(__dirname, 'config/avatars/')
+  fs.readdir(dir, (err, files) => {
+    log.fs(`Loading ${files.length} files...`, 'Avatars')
+    if (err) return log.err(err, 'Avatars Directory Reading')
+    if (!files) { return log.err('No avatar images found.', 'Avatars Directory Reading') } else {
+      for (let avatar of files) {
+        let ext = path.extname(avatar).match(/\.png|\.jpeg|\.gif|\.jpg/)
+        if (!ext) continue
+        try {
+          let data = fs.readFileSync(path.join(dir, avatar))
+          log.fs(`Loaded: ${avatar}`, 'Avatars')
+          avatars.push(`data:image/${ext[0].replace('.', '')};base64,` + new Buffer(data).toString('base64'))
+        } catch (err) { log.err(err, 'Avatars Directory Reading') }
+      }
+      if (avatars.length === 0) return log.fs('No images found.', 'Avatars')
+      log.fs('Finished.', 'Avatars')
     }
-    if (avatars.length === 0) return log.fs('No images found.', 'Avatars')
-    log.fs('Finished.', 'Avatars')
-  }
-})
+  })
+}
 
 // Load command files
 let cmds = {} // eslint-disable-line
@@ -126,6 +135,7 @@ fs.readdir(path.join(__dirname, 'commands/'), (err, files) => {
 self.on('ready', () => {
   isReady = true
   self.commands = commands
+  self.counts = counts
   log.ready(self, config)
   if (config.rotatePlayingGame && games.length > 0) {
     const stream = config.rotatePlayingGameInStreamingStatus

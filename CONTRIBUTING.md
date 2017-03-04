@@ -15,6 +15,8 @@ Glad you are thinking about contributing to this project! Make sure to read and 
 
 * Code contributions should match the existing code style. This project follows [JS Standard code style](https://github.com/feross/standard). Make sure all your commits follow it too before creating a PR.
 
-* Pull requests should point to the dev branch, not master
+* Pull requests should point to the master branch.
+
+* If you add any new options to `config.json`, make sure to add them to the `ConfigValidator.js` file as well.
 
 ### Thanks for contributing!

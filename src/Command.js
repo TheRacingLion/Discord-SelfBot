@@ -68,6 +68,7 @@ class Command {
     return new Promise((resolve, reject) => {
       this.self.createMessage(msg.channel.id, content)
       .then(msg => {
+        this.self.counts.msgsSent = this.self.counts.msgsSent + 1
         if (deleteDelay) {
           if (!this.deleteAfter || !this.config.deleteCommandMessages) return resolve(msg)
           if (msg.channel.guild && msg.channel.permissionsOf(this.self.user.id).has('manageMessages')) {
@@ -90,6 +91,7 @@ class Command {
     return new Promise((resolve, reject) => {
       this.self.createMessage(msg.channel.id, { content: '', embed: embed })
       .then(msg => {
+        this.self.counts.msgsSent = this.self.counts.msgsSent + 1
         if (deleteDelay) {
           if (!this.deleteAfter || !this.config.deleteCommandMessages) return resolve(msg)
           if (msg.channel.guild && msg.channel.permissionsOf(this.self.user.id).has('manageMessages')) {
