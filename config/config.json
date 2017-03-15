@@ -11,7 +11,15 @@
   "mentionNotificator": {
     "inConsole": true,
     "inNotificationChannel": true,
-    "logBlockedUsers": false
+    "logBlockedUsers": false,
+    "ignoredServers": ["SERVER ID"]
+  },
+  "keywordNotificator": {
+    "inConsole": true,
+    "inNotificationChannel": true,
+    "logBlockedUsers": false,
+    "caseInsensitive": true,
+    "ignoredServers": ["SERVER ID"]
   },
   "eventNotificator": {
     "inConsole": true,

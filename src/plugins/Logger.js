@@ -39,6 +39,12 @@ module.exports = {
       logger('magenta', 'Mention', `|> ${chalk.bgYellow.bold(msg.channel.guild.name)}|> #${chalk.bgYellow.bold(msg.channel.name)}|> ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
     }
   },
+  keyword (msg, word = '') {
+    if (typeof msg === 'object') {
+      const cleanMsg = msg.cleanContent.replace(/\n/g, ' ')
+      logger('magenta', `Keyword Mention: "${word}"`, `|> ${chalk.bgYellow.bold(msg.channel.guild.name)}|> #${chalk.bgYellow.bold(msg.channel.name)}|> ${msg.author.username} (${msg.author.id}):\n\n${cleanMsg}\n`)
+    }
+  },
   ready (self, config) {
     if (self.user.id !== config.ownerID) { configErr('Invalid ownerID. This ID does not match the ID of your token. It must be YOUR discord ID.') } else {
       console.log(chalk.cyan([

@@ -31,7 +31,8 @@ self.config = config
 const counts = {
   msgsGot: 0,
   msgsSent: 0,
-  mentionsGot: 0
+  mentionsGot: 0,
+  keywordsGot: 0
 }
 
 const commands = {
@@ -155,6 +156,8 @@ self.on('ready', () => {
 })
 
 require('./src/plugins/MentionStalker.js')(self, log, config)
+
+require('./src/plugins/KeywordLogger.js')(self, log, config)
 
 self.connect().catch(err => log.err(err, 'Login'))
 

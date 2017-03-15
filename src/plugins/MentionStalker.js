@@ -8,7 +8,9 @@ const moment = require('moment')
 
 module.exports = (self, log, config) => {
   self.on('messageCreate', (msg) => {
-    if (msg.author.id !== self.user.id && msg.channel.guild && ~msg.content.indexOf(self.user.id)) {
+    if (!msg.author || !msg.channel.guild) return
+    if (~config.mentionNotificator.ignoredServers.indexOf(msg.channel.guild.id)) return
+    if (msg.author.id !== self.user.id && ~msg.content.indexOf(self.user.id)) {
       self.counts.mentionsGot = self.counts.mentionsGot + 1
       if (!config.mentionNotificator.logBlockedUsers && self.relationships.has(msg.author.id)) {
         if (self.relationships.get(msg.author.id).type === 2) return
