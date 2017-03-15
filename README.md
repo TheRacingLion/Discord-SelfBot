@@ -48,11 +48,12 @@ After you have the required programs installed, you can go ahead and download th
 
 ### - Setup Config Files -
 
-Once you download the project files you will see a folder named `config`. Inside of it will be 3 files and 1 folder:
+Once you download the project files you will see a folder named `config`. Inside of it will be 4 files and 1 folder:
 
 - `avatars`
 - `config.json`
 - `games.json`
+- `keywords.json`
 - `paste.json`
 
 #### `avatars`
@@ -76,6 +77,13 @@ This is the main config file. Inside you will see several options, this is what 
   + `inConsole` (as a log to console)
   + `inNotificationChannel` (as a message sent to the notification channel)
   + `logBlockedUsers` (if you want users you blocked to be logged or not)
+  + `ignoredServers` (an array of server ID's you want the bot to ignore when searching for mentions)
+- `keywordNotificator` (if you want to have specific keywords notified)
+  + `inConsole` (as a log to console)
+  + `inNotificationChannel` (as a message sent to the notification channel)
+  + `logBlockedUsers` (if you want users you blocked to be logged or not)
+  + `caseInsensitive` (if you want the bot to search for the keywords while paying attention to the letter case or not)
+  + `ignoredServers` (an array of server ID's you want the bot to ignore when searching for keywords)
 - `eventNotificator` (if you want to have events like guild creations, or friend requests notified)
   + `inConsole` (as a log to console)
   + `inNotificationChannel` (as a message sent to the notification channel)
@@ -87,6 +95,10 @@ This is the main config file. Inside you will see several options, this is what 
 #### `games.json`
 
 This is where the game names you want to use for the rotating playing game option are. To add or delete games, just follow the structure of the games that are already on it. (If you have set the `rotatePlayingGame` option in the `config.json` file to `false`, then you dont need to worry about this file)
+
+#### `keywords.json`
+
+This is where the keywords that you want the bot to search for go in. (If you have set the `keywordNotificator` options in the `config.json` file to `false`, then you dont need to worry about this file)
 
 #### `paste.json`
 
