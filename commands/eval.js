@@ -9,7 +9,7 @@ module.exports = (self) => {
     if (msg.author.id !== this.self.user.id) return
 
     // Delete the msg, create a new one, and then eval
-    this.send(msg, 'Evaluating...', null).then(m => {
+    this.send(msg, 'Evaluating...').then(m => {
       let evaled = ''
       try {
         evaled = eval(args.join(' ')) // eslint-disable-line no-eval
@@ -18,7 +18,7 @@ module.exports = (self) => {
         this.log.err(err, 'Eval')
         return this.send(m, 'There was an error! Check console.')
       }
-      this.send(m, [
+      this.self.createMessage(msg.channel.id, [
         'Input:',
         '```js\n',
         args.join(' '),
@@ -28,7 +28,5 @@ module.exports = (self) => {
         '\n```'
       ].join(' '))
     })
-  }, {
-    deleteAfter: false
   })
 }

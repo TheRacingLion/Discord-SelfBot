@@ -16,7 +16,7 @@ module.exports = (self) => {
       if (Array.isArray(reply)) {
         reply = reply[~~(Math.random() * reply.length)]
       }
-      this.send(msg, reply)
+      this.self.createMessage(msg.channel.id, reply)
     } else return this.send(msg, 'Not found.')
   })
 }

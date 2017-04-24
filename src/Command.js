@@ -17,7 +17,7 @@ class Command {
     this.name = name || ''
     this.aliases = options.aliases || []
     this.perms = options.perms || []
-    this.deleteAfter = !!options.deleteAfter
+    this.deleteAfter = options.deleteAfter || this.config.deleteCommandMessages
     this.noPms = !!options.noPms
 
     if (typeof generator === 'function') {
@@ -71,13 +71,10 @@ class Command {
         this.self.counts.msgsSent = this.self.counts.msgsSent + 1
         if (deleteDelay) {
           if (!this.deleteAfter || !this.config.deleteCommandMessages) return resolve(msg)
-          if (msg.channel.guild && msg.channel.permissionsOf(this.self.user.id).has('manageMessages')) {
-            setTimeout(() => {
-              this.self.deleteMessage(msg.channel.id, msg.id)
-              .then(() => { resolve(msg) }).catch(reject)
-            }, deleteDelay)
-          }
-          return resolve(msg)
+          setTimeout(() => {
+            this.self.deleteMessage(msg.channel.id, msg.id)
+            .then(() => { resolve(msg) }).catch(reject)
+          }, deleteDelay)
         }
         return resolve(msg)
       })
@@ -94,15 +91,34 @@ class Command {
         this.self.counts.msgsSent = this.self.counts.msgsSent + 1
         if (deleteDelay) {
           if (!this.deleteAfter || !this.config.deleteCommandMessages) return resolve(msg)
-          if (msg.channel.guild && msg.channel.permissionsOf(this.self.user.id).has('manageMessages')) {
-            setTimeout(() => {
-              this.self.deleteMessage(msg.channel.id, msg.id)
-              .then(() => { resolve(msg) }).catch(reject)
-            }, deleteDelay)
-          }
-          return resolve(msg)
+          setTimeout(() => {
+            this.self.deleteMessage(msg.channel.id, msg.id)
+            .then(() => { resolve(msg) }).catch(reject)
+          }, deleteDelay)
         }
         return resolve(msg)
+      })
+      .catch(reject)
+    })
+  }
+
+  edit (msg, content, deleteDelay = 0) {
+    deleteDelay = deleteDelay || this.config.deleteCommandMessagesTime
+    if (content.length > 20000) {
+      this.log.err('Error sending a message larger than the limit (2000+)')
+      return
+    }
+    return new Promise((resolve, reject) => {
+      this.self.editMessage(msg.channel.id, msg.id, content)
+      .then(m => {
+        if (deleteDelay) {
+          if (!this.deleteAfter || !this.config.deleteCommandMessages) return resolve(m)
+          setTimeout(() => {
+            this.self.deleteMessage(m.channel.id, m.id)
+            .then(() => { resolve(m) }).catch(reject)
+          }, deleteDelay)
+        }
+        return resolve(m)
       })
       .catch(reject)
     })
