@@ -14,7 +14,8 @@ echo.
 echo Done!
 echo Creating run files for Selfbot...
 echo ------------------------------------
-echo :: Created by TheRacingLion (https://github.com/TheRacingLion) [ 6 / 12 / 2016 ] > run.bat
+echo @echo off > run.bat
+echo :: Created by TheRacingLion (https://github.com/TheRacingLion) [ 6 / 12 / 2016 ] >> run.bat
 echo :: -*Read LICENSE to know more about permissions*- >> run.bat
 echo title Discord Selfbot >> run.bat
 echo :START >> run.bat
