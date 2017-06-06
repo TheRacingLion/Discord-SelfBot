@@ -70,7 +70,7 @@ class Command {
       .then(msg => {
         this.self.counts.msgsSent = this.self.counts.msgsSent + 1
         if (deleteDelay) {
-          if (!this.deleteAfter || !this.config.deleteCommandMessages) return resolve(msg)
+          if (this.deleteAfter) return resolve(msg)
           setTimeout(() => {
             this.self.deleteMessage(msg.channel.id, msg.id)
             .then(() => { resolve(msg) }).catch(reject)
@@ -112,7 +112,7 @@ class Command {
       this.self.editMessage(msg.channel.id, msg.id, content)
       .then(m => {
         if (deleteDelay) {
-          if (!this.deleteAfter || !this.config.deleteCommandMessages) return resolve(m)
+          if (this.deleteAfter) return resolve(m)
           setTimeout(() => {
             this.self.deleteMessage(m.channel.id, m.id)
             .then(() => { resolve(m) }).catch(reject)
