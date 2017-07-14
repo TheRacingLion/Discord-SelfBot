@@ -8,6 +8,17 @@
   "rotateAvatarImage": true,
   "rotateAvatarImageTime" : 600000,
   "defaultStatus": "idle",
+  "PSN": {
+    "enabled": true,
+    "email": "Your PSN E-mail",
+    "password": "Your PSN password",
+    "psnID": "Your PSNid"
+  },
+  "XBOX": {
+    "enabled": false,
+    "gamertag": "Your XBOX Gamertag",
+    "apikey": "Your xboxapi.com apikey"
+  },
   "mentionNotificator": {
     "inConsole": true,
     "inNotificationChannel": true,

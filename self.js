@@ -17,6 +17,9 @@ const games = require('./config/games.json')
 
 const Command = require('./src/Command.js')
 
+const gumerPSN = require('gumer-psn')
+const xbox = require('node-xbox')(config.XBOX.apikey || '')
+
 // Check if config is valid
 configValidator.check(config, log)
 
@@ -49,7 +52,7 @@ self.registerCommand = function (name, generator, options) {
     throw new Error('Command names cannot contain spaces')
   }
   if (commands.main[name]) {
-    throw new Error('You have already registered a command for ' + name)
+    throw new Error(`You have already registered a command for ${name}`)
   }
   options = options || {}
   name = name.toLowerCase()
@@ -85,9 +88,7 @@ self.on('messageCreate', (msg) => {
       setTimeout(() => self.deleteMessage(msg.channel.id, msg.id), 750)
       command.process(msg, args)
     }
-    return
   }
-  return
 })
 
 // Event handling
@@ -109,7 +110,7 @@ if (config.rotateAvatarImage) {
         try {
           let data = fs.readFileSync(path.join(dir, avatar))
           log.fs(`Loaded: ${avatar}`, 'Avatars')
-          avatars.push(`data:image/${ext[0].replace('.', '')};base64,` + new Buffer(data).toString('base64'))
+          avatars.push(`data:image/${ext[0].replace('.', '')};base64,${new Buffer(data).toString('base64')}`)
         } catch (err) { log.err(err, 'Avatars Directory Reading') }
       }
       if (avatars.length === 0) return log.fs('No images found.', 'Avatars')
@@ -138,16 +139,103 @@ self.on('ready', () => {
   self.commands = commands
   self.counts = counts
   log.ready(self, config)
+  /* *************************************************************************************\
+  |   Update game from Xbox
+  \* *************************************************************************************/
+  if (config.XBOX.enabled) {
+    const gamertag = config.XBOX.gamertag
+    let xuid
+    let lastStatusXbox = {
+      online: null,
+      platform: null,
+      game: null,
+      dash: null
+    }
+
+    xbox.profile.xuid(gamertag, (error, data) => {
+      error = JSON.parse(data).success === 'false'
+
+      if (error) {
+        if (error.error_code === 404) {
+          log.log(`Gamertag: ${gamertag} not found.`, 'XBOX', 'bgGreen', true)
+          process.exit()
+        }
+      } else {
+        xuid = data
+      }
+
+      xbox.profile.presence(data, (error, activity) => {
+        lastStatusXbox = xboxStatus(activity, lastStatusXbox)
+      })
+    })
+
+    setInterval(() => {
+      xbox.profile.presence(xuid, (error, activity) => {
+        lastStatusXbox = xboxStatus(activity, lastStatusXbox)
+      })
+    }, 30000) // Edits XBOX status every 30 seconds. Do not change this value unless you subscribed to a tier.
+  }
+  /* *************************************************************************************\
+  |   Update game from PSN
+  \* *************************************************************************************/
+  if (config.PSN.enabled) {
+    const psnID = config.PSN.psnID
+    gumerPSN.init({
+      email: config.PSN.email,
+      password: config.PSN.password,
+      npLanguage: config.PSN.npLanguage,
+      region: config.PSN.region
+    })
+
+    let lastStatusPSN = {
+      online: null,
+      platform: null,
+      game: null,
+      dash: null
+    }
+
+    log.log(`Updating playing game from PSN status every 15 seconds.`, 'PSN', 'bgBlue', true)
+
+    setTimeout(() => { // Wait for login before first call
+      gumerPSN.getProfile(psnID, (error, profileData) => {
+        if (error) {
+          if (profileData.error.code === 2105356) {
+            log.log(`PSN ID: ${psnID} not found.`, 'PSN', 'bgBlue', true)
+          } else {
+            log.log(profileData.error.message, 'PSN', 'bgBlue', true)
+          }
+          process.exit()
+        } else {
+          lastStatusPSN = psnStatus(profileData, lastStatusPSN)
+        }
+      })
+    }, 2000)
+
+    setInterval(() => {
+      gumerPSN.getProfile(psnID, (error, profileData) => {
+        if (error) {
+          log.log(profileData.error.message, 'PSN', 'bgBlue', true)
+        }
+        lastStatusPSN = psnStatus(profileData, lastStatusPSN)
+      })
+    }, 15000) // Edits PSN status every 15 seconds. Do not change this value or PSN will ban you.
+  }
+  /* *************************************************************************************\
+  |   Rotate Playing game
+  \* *************************************************************************************/
   if (config.rotatePlayingGame && games.length > 0) {
     const stream = config.rotatePlayingGameInStreamingStatus
-    log.log(`Changing playing game ${stream ? 'in streaming status ' : ''}every ` + (config.rotatePlayingGameTime / 1000) / 60 + ' minutes.', 'Config')
+    log.log(`Changing playing game ${stream ? 'in streaming status ' : ''}every ${(config.rotatePlayingGameTime / 1000) / 60} minutes.`, 'Config')
     setInterval(() => {
       const game = games[~~(Math.random() * games.length)]
-      self.editStatus(config.defaultStatus.toLowerCase(), stream ? {name: game, type: 1, url: 'https://www.twitch.tv/twitch'} : {name: game})
+      self.editStatus(config.defaultStatus.toLowerCase(), stream ? {name: game, type: 1, url: 'https://www.twitch.tv/twitch'} : { name: game })
     }, config.rotatePlayingGameTime) // Edits playing game every X milliseconds (You can edit this number in the config file)
   }
+  /* *************************************************************************************\
+  |   Rotate avatars
+  \* *************************************************************************************/
   if (config.rotateAvatarImage && avatars.length > 0) {
-    log.log('Changing avatar every ' + (config.rotateAvatarImageTime / 1000) / 60 + ' minutes.', 'Config')
+    log.log(`Changing avatar every ${(config.rotateAvatarImageTime / 1000) / 60} minutes.`, 'Config')
     setInterval(() => {
       log.log('Changing avatar')
       self.editSelf({avatar: avatars[Math.floor(Math.random() * avatars.length)]}).catch(err => log.err(err, 'Avatar Rotator'))
@@ -164,3 +252,46 @@ self.connect().catch(err => log.err(err, 'Login'))
 process.on('SIGINT', () => { self.disconnect({reconnect: false}); setTimeout(() => process.exit(0), 1000) })
 
 process.on('unhandledRejection', (err) => log.err(err, 'Promise was rejected but there was no error handler'))
+
+function psnStatus (profileData, lastStatus) {
+  const online = profileData.presence ? profileData.presence.primaryInfo.onlineStatus === 'online' : false
+  const platform = online ? profileData.presence.primaryInfo.platform : null
+  const game = online ? profileData.presence.primaryInfo.gameTitleInfo ? profileData.presence.primaryInfo.gameTitleInfo.titleName : null : null
+  const dash = online && !game
+
+  if (game && game !== lastStatus.game) {
+    log.log(`Setting status as: ${game} (${platform})`, 'PSN', 'bgBlue', true)
+    self.editStatus(config.defaultStatus.toLowerCase(), { name: `${game} (${platform})` })
+  } else if (dash && dash !== lastStatus.dash) {
+    log.log(`Setting status as: Dashboard (${platform})`, 'PSN', 'bgBlue', true)
+    self.editStatus(config.defaultStatus.toLowerCase(), { name: `Dashboard (${platform})` })
+  } else if (!online && online !== lastStatus.online) {
+    log.log('Setting status as: idle', 'PSN', 'bgBlue', true)
+    self.editStatus(config.defaultStatus.toLowerCase(), { name: null })
+  }
+
+  lastStatus = { online: online, platform: platform, game: game, dash: dash }
+  return lastStatus
+}
+
+function xboxStatus (activity, lastStatus) {
+  activity = JSON.parse(activity)
+  const online = activity.state === 'Online'
+  const platform = online ? activity.devices[0].type : null
+  const game = online ? activity.devices[0].titles.length > 1 ? activity.devices[0].titles[1].name : null : null
+  const dash = online && !game
+
+  if (game && game !== lastStatus.game) {
+    log.log(`Setting status as: ${game} (${platform})`, 'XBOX', 'bgGreen', true)
+    self.editStatus(config.defaultStatus.toLowerCase(), { name: `${game} (${platform})` })
+  } else if (dash && dash !== lastStatus.dash) {
+    log.log(`Setting status as: ${platform} Home`, 'XBOX', 'bgGreen', true)
+    self.editStatus(config.defaultStatus.toLowerCase(), { name: `${platform} Home` })
+  } else if (!online && online !== lastStatus.online) {
+    log.log('Setting status as: idle', 'XBOX', 'bgGreen', true)
+    self.editStatus(config.defaultStatus.toLowerCase(), { name: null })
+  }
+
+  lastStatus = { online: online, platform: platform, game: game, dash: dash }
+  return lastStatus
+}
