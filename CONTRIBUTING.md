@@ -6,8 +6,11 @@
 -->
 <div align="center">
   <h1 align="center">~ Contributing ~</h1>
-    [![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-</div><br />
+  <p align="center">
+    <a href="https://github.com/feross/standard"><img src="https://cdn.rawgit.com/feross/standard/master/badge.svg"></a>
+    <br>
+  </p>
+</div>
 
 Glad you are thinking about contributing to this project! Make sure to read and understand this file before getting to work!
 
