@@ -139,39 +139,52 @@ self.on('ready', () => {
   self.commands = commands
   self.counts = counts
   log.ready(self, config)
+
+  let platformStatus = {
+    xbl: {
+      active: false,
+      online: null,
+      platform: null,
+      game: null,
+      dash: null
+    },
+   psn: {
+    active: false,
+    online: null,
+    platform: null,
+    game: null,
+    dash: null
+    }
+  }
+
   /* *************************************************************************************\
   |   Update game from Xbox
   \* *************************************************************************************/
   if (config.XBOX.enabled) {
     const gamertag = config.XBOX.gamertag
     let xuid
-    let lastStatusXbox = {
-      online: null,
-      platform: null,
-      game: null,
-      dash: null
-    }
+
+    log.log(`Updating playing game from XBL status every 30 seconds.`, 'XBL', 'bgGreen', true)
 
     xbox.profile.xuid(gamertag, (error, data) => {
       error = JSON.parse(data).success === 'false'
 
       if (error) {
         if (error.error_code === 404) {
-          log.log(`Gamertag: ${gamertag} not found.`, 'XBOX', 'bgGreen', true)
+          log.log(`Gamertag: ${gamertag} not found.`, 'XBL', 'bgGreen', true)
           process.exit()
         }
       } else {
         xuid = data
       }
-
       xbox.profile.presence(data, (error, activity) => {
-        lastStatusXbox = xboxStatus(activity, lastStatusXbox)
+        platformStatus = xboxStatus(activity, platformStatus)
       })
     })
 
     setInterval(() => {
       xbox.profile.presence(xuid, (error, activity) => {
-        lastStatusXbox = xboxStatus(activity, lastStatusXbox)
+        platformStatus = xboxStatus(activity, platformStatus)
       })
     }, 30000) // Edits XBOX status every 30 seconds. Do not change this value unless you subscribed to a tier.
   }
@@ -187,13 +200,6 @@ self.on('ready', () => {
       region: config.PSN.region
     })
 
-    let lastStatusPSN = {
-      online: null,
-      platform: null,
-      game: null,
-      dash: null
-    }
-
     log.log(`Updating playing game from PSN status every 15 seconds.`, 'PSN', 'bgBlue', true)
 
     setTimeout(() => { // Wait for login before first call
@@ -206,7 +212,7 @@ self.on('ready', () => {
           }
           process.exit()
         } else {
-          lastStatusPSN = psnStatus(profileData, lastStatusPSN)
+          platformStatus = psnStatus(profileData, platformStatus)
         }
       })
     }, 2000)
@@ -216,7 +222,7 @@ self.on('ready', () => {
         if (error) {
           log.log(profileData.error.message, 'PSN', 'bgBlue', true)
         }
-        lastStatusPSN = psnStatus(profileData, lastStatusPSN)
+        platformStatus = psnStatus(profileData, platformStatus)
       })
     }, 15000) // Edits PSN status every 15 seconds. Do not change this value or PSN will ban you.
   }
@@ -253,45 +259,48 @@ process.on('SIGINT', () => { self.disconnect({reconnect: false}); setTimeout(() 
 
 process.on('unhandledRejection', (err) => log.err(err, 'Promise was rejected but there was no error handler'))
 
-function psnStatus (profileData, lastStatus) {
+function psnStatus (profileData, platformStatus) {
   const online = profileData.presence ? profileData.presence.primaryInfo.onlineStatus === 'online' : false
   const platform = online ? profileData.presence.primaryInfo.platform : null
   const game = online ? profileData.presence.primaryInfo.gameTitleInfo ? profileData.presence.primaryInfo.gameTitleInfo.titleName : null : null
   const dash = online && !game
+  const active = (online && game !== null)
+  const xblActive = platformStatus.xbl.active
 
-  if (game && game !== lastStatus.game) {
+  if (active && game !== platformStatus.psn.game && !xblActive) {
     log.log(`Setting status as: ${game} (${platform})`, 'PSN', 'bgBlue', true)
     self.editStatus(config.defaultStatus.toLowerCase(), { name: `${game} (${platform})` })
-  } else if (dash && dash !== lastStatus.dash) {
+  } else if (dash && dash !== platformStatus.psn.dash && !xblActive) {
     log.log(`Setting status as: Dashboard (${platform})`, 'PSN', 'bgBlue', true)
     self.editStatus(config.defaultStatus.toLowerCase(), { name: `Dashboard (${platform})` })
-  } else if (!online && online !== lastStatus.online) {
+  } else if (!online && online !== platformStatus.psn.online && !xblActive) {
     log.log('Setting status as: idle', 'PSN', 'bgBlue', true)
     self.editStatus(config.defaultStatus.toLowerCase(), { name: null })
   }
-
-  lastStatus = { online: online, platform: platform, game: game, dash: dash }
-  return lastStatus
+  platformStatus.psn = { active: active, online: online, platform: platform, game: game, dash: dash }
+  return platformStatus
 }
 
-function xboxStatus (activity, lastStatus) {
+function xboxStatus (activity, platformStatus) {
+  console.log(platformStatus)
   activity = JSON.parse(activity)
   const online = activity.state === 'Online'
   const platform = online ? activity.devices[0].type : null
   const game = online ? activity.devices[0].titles.length > 1 ? activity.devices[0].titles[1].name : null : null
   const dash = online && !game
+  const active = (online && game !== null)
+  const psnActive = platformStatus.psn.active
 
-  if (game && game !== lastStatus.game) {
-    log.log(`Setting status as: ${game} (${platform})`, 'XBOX', 'bgGreen', true)
+  if (active && game !== platformStatus.xbl.game && !psnActive) {
+    log.log(`Setting status as: ${game} (${platform})`, 'XBL', 'bgGreen', true)
     self.editStatus(config.defaultStatus.toLowerCase(), { name: `${game} (${platform})` })
-  } else if (dash && dash !== lastStatus.dash) {
-    log.log(`Setting status as: ${platform} Home`, 'XBOX', 'bgGreen', true)
+  } else if (dash && dash !== platformStatus.xbl.dash && !psnActive) {
+    log.log(`Setting status as: ${platform} Home`, 'XBL', 'bgGreen', true)
     self.editStatus(config.defaultStatus.toLowerCase(), { name: `${platform} Home` })
-  } else if (!online && online !== lastStatus.online) {
-    log.log('Setting status as: idle', 'XBOX', 'bgGreen', true)
+  } else if (!online && online !== platformStatus.xbl.online && !psnActive) {
+    log.log('Setting status as: idle', 'XBL', 'bgGreen', true)
     self.editStatus(config.defaultStatus.toLowerCase(), { name: null })
   }
-
-  lastStatus = { online: online, platform: platform, game: game, dash: dash }
-  return lastStatus
+  platformStatus.xbl = { active: active, online: online, platform: platform, game: game, dash: dash }
+  return platformStatus
 }
