@@ -75,6 +75,10 @@ module.exports.check = function (config, log) {
     Err('deleteCommandMessages', 'bol')
   } else if (config.deleteCommandMessages && isNaN(config.deleteCommandMessagesTime)) {
     Err('deleteCommandMessagesTime', 'Must be a integer number.')
+  } else if (typeof config.PSN.enabled !== 'boolean') {
+    Err('PSN.enabled', 'bol')
+  } else if (typeof config.XBOX.enabled !== 'boolean') {
+    Err('XBOX.enabled', 'bol')
   } else {
     log.log('Config is valid. Starting Bot...', 'Config', 'bgCyan', true)
   }

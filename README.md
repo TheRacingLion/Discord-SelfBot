@@ -94,6 +94,15 @@ This is the main config file. Inside you will see several options, this is what 
 - `defaultEmbedColor` is the hex color code for the default color for embeds
 - `deleteCommandMessages` if command messages and error messages should be deleted after a bit
 - `deleteCommandMessagesTime` if you do want the command messages deleted, this is the time the bot should wait before doing it (in milliseconds)
+- `PSN` PSN Status setup
+  + `enabled` (if you want to use PSN Status reporting)
+  + `email` is your PSN email
+  + `password` is your PSN password
+  + `psnid` is the PSN ID you want to report on
+- `XBOX` XBOX Status setup
+  + `enabled` (if you want to use XBOX Status reporting)
+  + `gamertag` is the XBOX Gamertag you want to report on
+  + `apikey` is your apikey from http://xboxapi.com sign up for a free account
 
 #### `games.json`
 
