@@ -28,6 +28,11 @@
 
 # Before Setup
 
+## Disclaimer (July 29)
+Discord has been sending warning emails to people using selfbots and it seems like they may have even banned some for using them. Having said this, at this moment there is no confirmation on whether selfbots will be able to be used if they follow the rules bellow, but for now I would advice to keep an eye on your email just in case discord does send something to you. *I am not responsible for anything you decide to do with your selfbot*
+
+## Rules
+
 Please remember that selfbots arent fully suported by Discord and that it should only be used to make YOUR life easier and not others. Also keep in mind that discord has a set of semi-offical rules regarding selfbots:
 
 + A selfbot must not, under any circumstance, respond to other user's messages. This means it should not respond to commands, should not autoreply to certain keywords, etc. You must be the only one that can control it.
