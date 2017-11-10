@@ -6,7 +6,7 @@
 -->
 <div align="center">
   <h1 align="center">~ Discord Selfbot ~</h1>
-  <strong>A selfbot for discord that is setup and ready to go in less than 5 min.</strong><br />(If you already have the required programs installed)<br /><br />
+  <strong>A selfbot for Discord that is setup and ready to go in less than 5 minutes.</strong><br />(If you already have the required programs installed)<br /><br />
   <p align="center">
     <a href="https://github.com/feross/standard"><img src="https://cdn.rawgit.com/feross/standard/master/badge.svg"></a>
   <br>
@@ -29,7 +29,7 @@
 # Before Setup
 
 ## Disclaimer (July 29)
-Discord has been sending warning emails to people using selfbots and it seems like they may have even banned some for using them. Having said this, at this moment there is no confirmation on whether selfbots will be able to be used if they follow the rules bellow, but for now I would advice to keep an eye on your email just in case discord does send something to you. *I am not responsible for anything you decide to do with your selfbot*
+Discord has been sending warning emails to people using selfbots and it seems like they may have even banned some for using them. Having said this, at this moment there is no confirmation on whether selfbots will be able to be used if they follow the rules below, but for now I would advice to keep an eye on your email just in case discord does send something to you. *I am not responsible for anything you decide to do with your selfbot.*
 
 ## Rules
 
@@ -39,7 +39,7 @@ Please remember that selfbots arent fully suported by Discord and that it should
 + A selfbot must not, under any circumstance, do "invite scraping". This is the action of detecting server invites in chat, and automatically joining a server using that invite.
 + As selfbots run under your account they are subject to the same Terms of Service. Meaning they should not spam, insult or demean others, post NSFW material, spread viruses or illegal material, etc. They have to follow the same rules that you follow.
 
-IF, and only if you accept the above rules of selfbots, then you may proceed.
+IF, and only if, you accept the above rules of selfbots, then you may proceed.
 
 # SelfBot Setup
 
@@ -48,11 +48,11 @@ IF, and only if you accept the above rules of selfbots, then you may proceed.
 Before you can download and setup the bot, there are 2 programs you need to have installed on your computer to make sure everything runs on first go:
 
 - [**Git**](https://git-scm.com/downloads)
-- [**Node JS**](https://nodejs.org/en/download/current/)
+- [**Node.js**](https://nodejs.org/en/download/current/)
 
 ### - Download Project Files -
 
-After you have the required programs installed, you can go ahead and download the project files. To do that, you either download the ZIP folder or do `git clone https://github.com/TheRacingLion/Discord-SelfBot.git` if you are a console person. Once you finish downloading it you will be ready to setup the config files.
+After you have the required programs installed, you can go ahead and download the project files. To do that, you either download the ZIP folder or do `git clone https://github.com/TheRacingLion/Discord-SelfBot.git` if you are a console person. Once you finish downloading it,you will be ready to setup the config files.
 
 ### - Setup Config Files -
 
@@ -66,21 +66,21 @@ Once you download the project files you will see a folder named `config`. Inside
 
 #### `avatars`
 
-This is the folder where you drag and drop your avatar images to, if you enabled avatar rotating.
+This is the folder where you drag and drop your avatar images if you enabled avatar rotating.
 
 #### `config.json`
 
-This is the main config file. Inside you will see several options, this is what each one means:
+This is the main config file. Inside you will see several options. This is what each one means:
 
-- `token` is your discord token. (if you dont know what a discord token is, or how to get yours [**check out this tutorial made by me**](https://github.com/TheRacingLion/Discord-SelfBot/wiki/Discord-Token-Tutorial))
+- `token` is your Discord token. (if you don't know what a Discord token is, or how to get yours, [**check out this tutorial made by me**](https://github.com/TheRacingLion/Discord-SelfBot/wiki/Discord-Token-Tutorial))
 - `ownerID` is your discord ID
-- `prefix` is the desired prefix for bot commands (can use `@mention ` if you want the prefix to be your discord mention)
-- `rotatePlayingGame`, if you want your discord playing game to rotate games (from the `games.json` file)
+- `prefix` is the desired prefix for bot commands (can use `@mention ` if you want the prefix to be your Discord mention)
+- `rotatePlayingGame`, if you want your Discord playing game to rotate games (from the `games.json` file)
 - `rotatePlayingGameTime`, if you do want the game to rotate, this is the time interval you want for it (in milliseconds)
 - `rotatePlayingGameInStreamingStatus`, if you do want the game to rotate, if you want it to rotate in streaming status
-- `rotateAvatarImage`, if you want your discord avatar image to rotate (from the images in `config/avatars` folder)
+- `rotateAvatarImage`, if you want your Discord avatar image to rotate (from the images in `config/avatars` folder)
 - `rotateAvatarImageTime`, if you do want the avatar to rotate, this is the time interval you want for it (in milliseconds)
-- `defaultStatus`, the default discord status to show on your account. Either "online", "idle", "dnd" (Do Not Disturb) or "invisible"
+- `defaultStatus`, the default Discord status to show on your account. Either "online", "idle", "dnd" (Do Not Disturb) or "invisible"
 - `mentionNotificator` (if you want to have your mentions notified)
   + `inConsole` (as a log to console)
   + `inNotificationChannel` (as a message sent to the notification channel)
@@ -123,7 +123,7 @@ This file is where the meme texts are stored for the `paste` command, if you wis
 
 ### - Start the bot -
 
-When you have the required programs installed, have all project files, and have setup config files you can start the bot:
+When you have the required programs installed, have all project files, and have setup config files, you can start the bot:
 
 #### Windows
 
@@ -133,11 +133,11 @@ If for some reason you have ran `installer.bat`, it disapeared and it didnt crea
 
 #### Linux / Mac
 
-Executable files are kind of weird in linux, and users most likely use console to do their work, so to setup this selfbot on linux or mac open a terminal in the directory you downloaded the files to and type `npm i`. Once it is finished you can start the selfbot by using `npm start` or `node self.js`. If you did everything correctly, the bot should start up fine.
+Executable files are kind of weird in Linux, and users most likely use console to do their work, so to setup this selfbot on linux or mac open a terminal in the directory you downloaded the files to and type `npm i`. Once it is finished you can start the selfbot by using `npm start` or `node self.js`. If you did everything correctly, the bot should start up fine.
 
 # Commands
 
-All commands get logged to console, are case insensentive and are tested to see if the owner of the bot was the one who triggered the command. It should be easy to create commands if you know the basics of javascript. The library used is [**Eris**](https://abal.moe/Eris/docs/CommandClient#function-registerCommand).
+All commands get logged to console, are case insensentive and are tested to see if the owner of the bot was the one who triggered the command. It should be easy to create commands if you know the basics of JavaScript. The library used is [**Eris**](https://abal.moe/Eris/docs/CommandClient#function-registerCommand).
 
 ### - Default Commands -
 
@@ -145,7 +145,7 @@ The bot has several default commands. (Each command is explained inside their ow
 
 ### - Creating Commands -
 
-When you want to create a new command, just add a new file to the `commands` folder and name it something like `mycommand.js` and then follow the basic structure bellow. If your command needs some kind of special options like permissions or you just want to set it to be used on guilds only, then you can use the pre-made command options shown bellow. Thhere are also some helper functions built in to the function.
+When you want to create a new command, just add a new file to the `commands` folder and name it something like `mycommand.js` and then follow the basic structure below. If your command needs some kind of special options like permissions or you just want to set it to be used on guilds only, then you can use the pre-made command options shown below. Thhere are also some helper functions built in to the function.
 
 ```js
 /*
@@ -178,11 +178,11 @@ module.exports = (self) => {
 
 ### - Logging -
 
-The selfbot comes with his own logger file, which includes a few options to log things to console. If you know what you are doing, you can add many more. It uses [**Chalk**](https://www.npmjs.com/package/chalk#colors) to change the color of the logged text, so you can change the colors if you do not like them.
+The selfbot comes with its own logger file, which includes a few options to log things to console. If you know what you are doing, you can add many more. It uses [**Chalk**](https://www.npmjs.com/package/chalk#colors) to change the color of the logged text, so you can change the colors if you do not like them.
 
 #### Normal Logs
 
-If you just want to log text to console you can do:
+If you just want to log text to console, you can do:
 ```js
 log.log('Text you want to log', 'Logger title', 'Chalk color that you want for the logger title', timed)
 /*
@@ -194,7 +194,7 @@ log.log('Text you want to log', 'Logger title', 'Chalk color that you want for t
 
 #### Warning Logs
 
-If you want to log a warning to console you can do:
+If you want to log a warning to console, you can do:
 ```js
 log.warn('Something weird but non-breaking happened', 'Warning origin')
 // Warning origin means the place where the warning came from (optional)
@@ -202,7 +202,7 @@ log.warn('Something weird but non-breaking happened', 'Warning origin')
 
 #### Error Logs
 
-If you want to log errors to console you can do:
+If you want to log errors to console, you can do:
 ```js
 let err = 'This is an error'
 log.err(err, 'Error origin')
@@ -211,4 +211,4 @@ log.err(err, 'Error origin')
 
 # License
 
-[MIT](LICENSE). Copyright (c) 2016 [TheRacingLion](https://github.com/TheRacingLion).
+[MIT](LICENSE). Copyright © 2016, 2017 [TheRacingLion](https://github.com/TheRacingLion).
