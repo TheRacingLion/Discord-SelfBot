@@ -4,7 +4,7 @@
       / ____ \\ V /| (_| || |_| (_| || |    | | \ \| (_) || |_| (_| || |_| (_) || |
      /_/    \_\\_/  \__,_| \__|\__,_||_|    |_|  \_\\___/  \__|\__,_| \__|\___/ |_|
 /* -------------------------------------------------------------------------------------- */
-\                   - Supports png, jpeg, gif (turbo only) and jpg images                  \
+\                   - Supports png, jpeg, gif (nitro only) and jpg images                  \
 /                 - Only have to drag and drop your images into the folder                 /
 \        - You can just leave this file here, it will not effect the avatar rotator        \
 /* -------------------------------------------------------------------------------------- */
