@@ -145,7 +145,7 @@ The bot has several default commands. (Each command is explained inside their ow
 
 ### - Creating Commands -
 
-When you want to create a new command, just add a new file to the `commands` folder and name it something like `mycommand.js` and then follow the basic structure below. If your command needs some kind of special options like permissions or you just want to set it to be used on guilds only, then you can use the pre-made command options shown below. Thhere are also some helper functions built in to the function.
+When you want to create a new command, just add a new file to the `commands` folder and name it something like `mycommand.js` and then follow the basic structure below. If your command needs some kind of special options like permissions or you just want to set it to be used on guilds only, then you can use the pre-made command options shown below. There are also some helper functions built in to the function.
 
 ```js
 /*
