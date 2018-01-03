@@ -61,7 +61,7 @@ class Command {
 
   send (msg, content, deleteDelay = 0) {
     deleteDelay = deleteDelay || this.config.deleteCommandMessagesTime
-    if (content.length > 20000) {
+    if (content.length > 2000) {
       this.log.err('Error sending a message larger than the limit (2000+)')
       return
     }
