@@ -28,8 +28,8 @@
 
 # Before Setup
 
-## Disclaimer (July 29)
-Discord has been sending warning emails to people using selfbots and it seems like they may have even banned some for using them. Having said this, at this moment there is no confirmation on whether selfbots will be able to be used if they follow the rules below, but for now I would advice to keep an eye on your email just in case discord does send something to you. *I am not responsible for anything you decide to do with your selfbot.*
+## Selfbots on Discord
+**Selfbots are officially banned.** Those caught using one, will most likely be banned from Discord and have their account disabled. It has been considered as an API abuse and is no longer tolerated. Today (19/06/2018), I have decided to archive this repository and provide no more help for this project. You are still free to use it at your own risk, although like I have said many times before *I am not responsible for anything you decide to do with your selfbot.* Most of the code on this repository is very outdated, and if it were today, I would probably do it completely different. Maybe some day I will make another project that you will enjoy. Thanks to everyone that has used it! :D
 
 ## Rules
 
@@ -211,4 +211,4 @@ log.err(err, 'Error origin')
 
 # License
 
-[MIT](LICENSE). Copyright © 2016, 2017 [TheRacingLion](https://github.com/TheRacingLion).
+[MIT](LICENSE). Copyright © 2016, 2017, 2018 [TheRacingLion](https://github.com/TheRacingLion).
